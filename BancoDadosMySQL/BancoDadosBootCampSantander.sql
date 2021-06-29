@@ -1,18 +1,8 @@
 use auladb;
 
-/* ERROS
-
-clientes
-conta_corrente
-cliente_transacao
-
-
-*/
-
-create table teste (
-nome varchar (50) not null
-);
-
+drop table banco;
+drop table cliente_transacao;
+alter table cliente_transacao change tipo_trasacao_id tipo_transacao_id int not null;
 
 create table if not exists banco (
 numero integer not null,
@@ -22,7 +12,6 @@ data_criacao timestamp not null default current_timestamp,
 primary key (numero)
 );
 
-
 create table if not exists agencia (
 banco_numero integer not null,
 numero integer not null,
@@ -31,19 +20,17 @@ ativo boolean not null default true,
 data_criacao timestamp not null default current_timestamp,
 primary key (banco_numero, numero),
 FOREIGN KEY (banco_numero) references banco (numero)
-
 );
 
+
 create table cliente (
-numero BIGINT,
+numero BIGINT auto_increment,
 nome varchar (120) not null,
 email varchar (250) not null,
 ativo boolean not null default true,
 data_criacao timestamp not null default current_timestamp,
 primary key (numero)
-
 );
-
 
 create table conta_corrente (
 banco_numero integer not null,
@@ -63,7 +50,6 @@ id serial primary key,
 nome varchar (50) not null,
 ativo boolean not null default true,
 data_criacao timestamp not null default current_timestamp
-
 );
 
 create table cliente_transacao (
@@ -73,16 +59,17 @@ agencia_numero integer not null,
 conta_corrente_numero bigint not null,
 conta_corrente_digito smallint not null,
 cliente_numero bigint not null,
-tipo_trasacao_id int not null,
+tipo_transacao_id int not null,
 valor numeric (15,2) not null,
 data_criacao timestamp not null default current_timestamp,
 foreign key (banco_numero, agencia_numero, conta_corrente_numero, conta_corrente_digito, cliente_numero) references  conta_corrente (banco_numero, agencia_numero, numero, digito, cliente_numero)
-
 );
 
-alter table cliente_transacao change tipo_trasacao_id tipo_transacao_id int not null;
 
-select * from banco; /* ok inserido com sucesso*/
+select * from banco; 
+select * from agencia;
+select * from cliente;
+
 INSERT INTO banco (numero, nome) VALUES (213,'Banco Arbi S.A.');
 INSERT INTO banco (numero, nome) VALUES (247,'Banco Itaú S.A.');
 INSERT INTO banco (numero, nome) VALUES (654,'Banco A.J.Renner S.A.');
@@ -235,8 +222,6 @@ INSERT INTO banco (numero, nome) VALUES (230,'Unicard Banco Múltiplo S.A.');
 INSERT INTO banco (numero, nome) VALUES (0914,'Unicred Central do Rio Grande do Sul');
 INSERT INTO banco (numero, nome) VALUES (84,'Unicred Norte do Paraná');
 
-
-select * from agencia; /* ok inserido com sucesso*/
 INSERT INTO agencia (banco_numero, numero, nome) VALUES (1,1,'Agência número 1 do banco Banco do Brasil S.A.');
 INSERT INTO agencia (banco_numero, numero, nome) VALUES (1,2,'Agência número 2 do banco Banco do Brasil S.A.');
 INSERT INTO agencia (banco_numero, numero, nome) VALUES (1,3,'Agência número 3 do banco Banco do Brasil S.A.');
@@ -534,11 +519,8 @@ INSERT INTO agencia (banco_numero, numero, nome) VALUES (477,14,'Agência númer
 INSERT INTO agencia (banco_numero, numero, nome) VALUES (477,15,'Agência número 15 do banco Citibank N.A.');
 INSERT INTO agencia (banco_numero, numero, nome) VALUES (477,16,'Agência número 16 do banco Citibank N.A.');
 
-/*PRIMEIRO erro aqui*/
-
-select * from cliente;
-INSERT INTO cliente (numero, nome, email) VALUES (1,'Umbelina Neves','umbelina_neves@usa.net');
-INSERT INTO cliente (numero, nome, email) VALUES (5, 'Godinho ou Godim Felgueiras','godinho_ou_godim_felgueiras@hermanos.com.ar');
+INSERT INTO cliente (nome, email) VALUES ('Umbelina Neves','umbelina_neves@usa.net');
+INSERT INTO cliente (nome, email) VALUES ('Godinho ou Godim Felgueiras','godinho_ou_godim_felgueiras@hermanos.com.ar');
 INSERT INTO cliente (nome, email) VALUES ('Ricardo Garcés','ricardo_garces@discovery.channel.com');
 INSERT INTO cliente (nome, email) VALUES ('Adélia Sobral','adelia_sobral@usa.net');
 INSERT INTO cliente (nome, email) VALUES ('Zenaide Peçanha','zenaide_pecanha@vaildochaves.com.mx');
@@ -1038,7 +1020,7 @@ INSERT INTO cliente (nome, email) VALUES ('Crispim Querino','crispim_querino@sam
 INSERT INTO cliente (nome, email) VALUES ('Paraguaçu Carijó','paraguacu_carijo@hotmail.com');
 INSERT INTO cliente (nome, email) VALUES ('Otávio Regueira','otavio_regueira@sertanejo.com.br');
 
-/*SEGUNDO ERRO erro aqui tambem */
+
 select * from conta_corrente;
 INSERT INTO conta_corrente (banco_numero,agencia_numero,numero,digito,cliente_numero) VALUES (1,2,187511463,1,300);
 INSERT INTO conta_corrente (banco_numero,agencia_numero,numero,digito,cliente_numero) VALUES (1,2,400962468,2,348);
@@ -1617,6 +1599,7 @@ INSERT INTO conta_corrente (banco_numero,agencia_numero,numero,digito,cliente_nu
 INSERT INTO conta_corrente (banco_numero,agencia_numero,numero,digito,cliente_numero) VALUES (477,16,106523513,8,463);
 
 select * from tipo_transacao; /* ok inserido com sucesso */
+
 INSERT INTO tipo_transacao (nome) VALUES ('Débito');
 INSERT INTO tipo_transacao (nome) VALUES ('Crédito');
 INSERT INTO tipo_transacao (nome) VALUES ('Transferência');
@@ -1625,9 +1608,6 @@ INSERT INTO tipo_transacao (nome) VALUES ('Empréstimo');
 select * from cliente_transacao;
 
 
-/* TERCEIRO ERRO aqui erro aqui tres*/
-
-select * from cliente_transacao;
 INSERT INTO cliente_transacao (banco_numero,agencia_numero,conta_corrente_numero,conta_corrente_digito,cliente_numero,tipo_transacao_id,valor) VALUES (247,30,424222306,8,208,3, 0.87);
 INSERT INTO cliente_transacao (banco_numero,agencia_numero,conta_corrente_numero,conta_corrente_digito,cliente_numero,tipo_transacao_id,valor) VALUES (104,12,203989772,8,65,3, 1.61);
 INSERT INTO cliente_transacao (banco_numero,agencia_numero,conta_corrente_numero,conta_corrente_digito,cliente_numero,tipo_transacao_id,valor) VALUES (655,4,14118439,3,454,3, 1.73);
@@ -3646,5 +3626,3 @@ INSERT INTO cliente_transacao (banco_numero,agencia_numero,conta_corrente_numero
 INSERT INTO cliente_transacao (banco_numero,agencia_numero,conta_corrente_numero,conta_corrente_digito,cliente_numero,tipo_transacao_id,valor) VALUES (1,26,268004601,2,373,2, 858.30);
 INSERT INTO cliente_transacao (banco_numero,agencia_numero,conta_corrente_numero,conta_corrente_digito,cliente_numero,tipo_transacao_id,valor) VALUES (104,93,257282600,5,134,2, 859.65);
 INSERT INTO cliente_transacao (banco_numero,agencia_numero,conta_corrente_numero,conta_corrente_digito,cliente_numero,tipo_transacao_id,valor) VALUES (477,12,188340066,0,283,2, 859.85);
-select * from cliente_transacao;
-*/
