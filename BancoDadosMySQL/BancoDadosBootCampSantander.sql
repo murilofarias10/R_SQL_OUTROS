@@ -1,3 +1,4 @@
+/*BANCO DE DADOS CRIADO NA AULA 27-06-2021*/
 use auladb;
 
 drop table banco;
@@ -65,11 +66,95 @@ data_criacao timestamp not null default current_timestamp,
 foreign key (banco_numero, agencia_numero, conta_corrente_numero, conta_corrente_digito, cliente_numero) references  conta_corrente (banco_numero, agencia_numero, numero, digito, cliente_numero)
 );
 
-
-select * from banco; 
 select * from agencia;
+select * from banco; 
 select * from cliente;
+select * from cliente_transacao;
+select * from conta_corrente;
+select * from tipo_transacao;
 
+/* CODIGOS DE CONSULTAS EXECUTADOS NA AULA 29.06.2021*/
+select numero, nome, ativo from banco;
+select banco_numero, nome from agencia;
+select numero, nome, email from cliente;
+select id, nome from tipo_transacao;
+select banco_numero, agencia_numero, cliente_numero from conta_corrente;
+select banco_numero, agencia_numero, cliente_numero from cliente_transacao;
+
+create table if not exists teste(
+	id serial primary key,
+    nome varchar (50) not null,
+    created_at timestamp not null default current_timestamp
+
+);
+
+drop table if exists teste;
+
+create table if not exists teste(
+	cpf varchar(11) not null,
+    nome varchar (50) not null,
+    created_at timestamp not null default current_timestamp,
+    primary key (cpf)
+
+);
+
+/*NO POSTGRESQL É POSSIVEL UTILIZAR O COMANDO ON CONFLICT DO NOTHING
+select * from teste;
+insert into teste (cpf, nome, created_at) values 
+				(40016652800, 'murilo farias', '2021-06-29 12:00:00' ON CONFLICT DO NOTHING); */
+                
+  select * from teste;
+  
+insert into teste (cpf, nome, created_at) values 
+				(40023411100, 'murilo farias', '2021-06-29 12:00:00');              
+
+UPDATE teste SET nome = 'murilo' WHERE cpf = '40033322210';
+
+update teste set cpf ='11111111111' where cpf = '11111111222';
+
+/* PARA atulização especificass HABILITAR ESTE COMANDO
+SET SQL_SAFE_UPDATES = 0; DESABILITADO 1=HABILITADO */
+
+
+select numero, nome from banco;
+
+/*NO POSTGRE PARA SABER nome das COLUMAS E INFORMACOES*/
+select * from information_schema.columns where table_name = 'banco';
+select column_name, data_type from information_schema.columns where table_name = 'banco';
+
+/*funções agregadas
+AVG É PARA TRAZER A MEDIA NO POSTGRESQL
+select AVG valor from cliente_transacao;
+*/
+
+select VALOR from cliente_transacao;
+select AVG (valor) from cliente_transacao;
+
+/*funções agregadas
+COUNT É PARA CONTAR
+SELECT COUNT numero FROM cliente;
+*/
+select * from cliente;
+SELECT COUNT(numero)from cliente;
+
+/*contando somente emails que contem gmail.com*/
+SELECT COUNT(numero)from cliente where email LIKE '%gmail.com%';
+
+/*funções agregadas
+MAX maior numero e min menor numero
+select max numero from cliente;
+*/
+
+select * from cliente_transacao;
+select max(numero) from cliente;
+select min(numero) from cliente;
+select max(valor) from cliente_transacao;
+select count(id)from cliente_transacao;
+
+select count(valor)from cliente_transacao having count(valor) > 1100;
+
+
+/*VALORES INSERIDOS NA AULA 28-06-2021*/
 INSERT INTO banco (numero, nome) VALUES (213,'Banco Arbi S.A.');
 INSERT INTO banco (numero, nome) VALUES (247,'Banco Itaú S.A.');
 INSERT INTO banco (numero, nome) VALUES (654,'Banco A.J.Renner S.A.');
