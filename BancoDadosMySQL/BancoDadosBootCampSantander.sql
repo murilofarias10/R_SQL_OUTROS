@@ -154,6 +154,55 @@ select count(id)from cliente_transacao;
 select count(valor)from cliente_transacao having count(valor) > 1100;
 
 
+/* CODIGOS DE JOINS EXECUTADOS NA AULA 30.06.2021*/
+
+select numero, nome from banco;
+select banco_numero, numero, nome from agencia;
+select numero, nome from cliente;
+select banco_numero, agencia_numero, numero, digito, cliente_numero from conta_corrente;
+select id from tipo_transacao;
+select banco_numero, agencia_numero, conta_corrente_numero, conta_corrente_digito, cliente_numero from cliente_transacao;
+
+/* no POSTGRE select count 1 from agencia NAO USA O PARENTESES*/
+select * from banco;
+select * from agencia;
+select count(*) from banco; /*151 banco*/
+select count(1) from agencia; /*296 agencias*/
+/*   tras: tabela.coluna tabela.coluna tabela.coluna tabela.coluna from      agencia    quando tabela.coluna = tabela.coluna  */
+select banco.numero, banco.nome, agencia.numero, agencia.nome from banco JOIN agencia ON agencia.banco_numero = banco.numero;
+
+/* tras: conta qtde numero from banco quando na agencia banco_numero */
+select count(banco.numero) from banco JOIN agencia ON agencia.banco_numero = banco.numero;
+
+/*agrupando por banco.numero*/
+select banco.numero from banco JOIN agencia ON agencia.banco_numero = banco.numero group BY banco.numero;
+
+select count(banco.numero) from banco JOIN agencia ON agencia.banco_numero = banco.numero;
+
+select * from banco;
+select * from agencia;
+select banco.numero, banco.nome, agencia.numero, agencia.nome from banco left join agencia ON agencia.banco_numero = banco.numero;
+
+
+/* CTE COMON TABLE EXPRESSION*/
+
+select numero, nome from banco;
+select banco_numero, numero, nome from agencia;
+
+/* no POSTGRE voce pode criar assim*/
+with tbl_tmp_banco as 
+	select numero, nome from banco,
+    
+select numero, nome from tbl_tmp_banco;
+
+with parameters as 
+	select 213 as banco_numero
+    , tbl_tmp_banco as select numero, nome
+    from banco 
+    Join parameters on p
+
+
+
 /*VALORES INSERIDOS NA AULA 28-06-2021*/
 INSERT INTO banco (numero, nome) VALUES (213,'Banco Arbi S.A.');
 INSERT INTO banco (numero, nome) VALUES (247,'Banco Itaú S.A.');
