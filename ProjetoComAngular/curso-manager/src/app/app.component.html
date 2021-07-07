@@ -3,7 +3,9 @@
 
 <br><br> {{name}}
 
-
+<br><br>
+<!-- Two way para alterar, one way <input [ngModel]="name" name="name"> não altera-->
+<input [(ngModel)]="name" name="name">
 <br><br>
 
 <app-course-list></app-course-list>
