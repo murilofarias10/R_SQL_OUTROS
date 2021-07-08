@@ -1,11 +1,16 @@
+<!-- 
 {{title}}
 <h1>Projeto Murilo com Angular</h1>
 
-<br><br> {{name}}
-
-<br><br>
-<!-- Two way para alterar, one way <input [ngModel]="name" name="name"> não altera-->
+<br>one way não altera:
+<input [ngModel]="name" name="name">
+<br>
+<br> Two way para alterar:
 <input [(ngModel)]="name" name="name">
+<br>
+<br><br> Arqui será alterado: {{name}}
 <br><br>
-
-<app-course-list></app-course-list>
+-->
+<div class="container">
+    <app-course-list></app-course-list>
+</div>
