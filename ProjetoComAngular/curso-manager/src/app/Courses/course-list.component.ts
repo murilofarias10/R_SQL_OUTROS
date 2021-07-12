@@ -25,21 +25,21 @@ export class CourseListComponent implements OnInit {
             {
                 id: 1,
                 name: 'Murilo',
-                imageUrl: '',
+                imageUrl: '/assets/images/forms.png',
                 price: 99.99,
-                code: 'XPS-8799',
+                code: 'MUR-1992',
                 duration: 120,
-                rating: 4.5,
+                rating: 2.5,
                 releaseDate: 'November, 10, 2021'
             },
             {
                 id: 2,
                 name: 'Thamie',
-                imageUrl: '',
+                imageUrl: '/assets/images/http.png',
                 price: 49.99,
-                code: 'LKL-8799',
+                code: 'TMY-1998',
                 duration: 80,
-                rating: 5.4,
+                rating: 5.0,
                 releaseDate: 'November, 10, 2021'
              }
                     ]
