@@ -8,6 +8,7 @@ agora mudamos para ler um arquivo html
 
 import {Component, OnInit } from "@angular/core";
 import {Course} from './course';
+import { CourseService } from "./course.service";
 
 @Component({
         selector: 'app-course-list',
@@ -20,6 +21,14 @@ export class CourseListComponent implements OnInit {
 
 export class CourseListComponent implements OnInit {
     courses: Course[] = []; 
+
+    constructor(private courseService: CourseService){ }
+
+    ngOnInit(): void {
+    this.courses = this.courseService.retrieveAll();
+
+}
+/* ANTERIOR
     ngOnInit(): void {
     this.courses = [
             {
@@ -44,4 +53,5 @@ export class CourseListComponent implements OnInit {
              }
                     ]
 }
+*/
       }
