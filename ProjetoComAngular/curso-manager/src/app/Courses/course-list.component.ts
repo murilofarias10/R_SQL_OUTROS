@@ -20,14 +20,44 @@ export class CourseListComponent implements OnInit {
         */
 
 export class CourseListComponent implements OnInit {
-    courses: Course[] = []; 
 
+    filtercourses: Course[]=[];
+filtercourses2: Course[]=[];
+
+    _courses: Course[] = []; 
+_courses2: Course[] = []; 
+
+    _filterby!: string;
+_filterby2!: string;
     constructor(private courseService: CourseService){ }
 
     ngOnInit(): void {
-    this.courses = this.courseService.retrieveAll();
+    this._courses = this.courseService.retrieveAll();
+this._courses2 = this.courseService.retrieveAll();
 
+    this.filtercourses = this._courses;
+ this.filtercourses2 = this._courses2;
 }
+
+    set filter(value: string){
+    this._filterby = value;
+    this.filtercourses = this._courses.filter((course: Course) => course.name.toLocaleLowerCase().indexOf(this._filterby.toLocaleLowerCase()) > -1);
+}
+
+set filter2(value: string){
+    this._filterby2 = value;
+    this.filtercourses = this._courses2.filter((course: Course) => course.price.toLocaleString().indexOf(this._filterby2.toLocaleString()) > -1);
+}
+    get filter() {
+    return this._filterby;
+}
+
+ get filter2() {
+    return this._filterby2;
+}
+
+
+
 /* ANTERIOR
     ngOnInit(): void {
     this.courses = [

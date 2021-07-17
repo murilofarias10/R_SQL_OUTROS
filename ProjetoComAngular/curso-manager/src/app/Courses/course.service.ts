@@ -18,7 +18,7 @@ var COURSES: Course[] = [
 
 {
                 id: 1,
-                name: 'aaaaa',
+                name: 'Vasco',
                 imageUrl: '/assets/images/forms.png',
                 price: 99.99,
                 code: 'MUR-1992',
@@ -28,7 +28,7 @@ var COURSES: Course[] = [
             },
             {
                 id: 2,
-                name: 'bbbbb',
+                name: 'Flamengo',
                 imageUrl: '/assets/images/http.png',
                 price: 49.99,
                 code: 'TMY-1998',
@@ -37,17 +37,26 @@ var COURSES: Course[] = [
                 releaseDate: 'November, 10, 2021'
              },
 
-{
+                {
                 id: 3,
-                name: 'ccccc',
+                name: 'Fluminense',
                 imageUrl: '/assets/images/http.png',
                 price: 49.99,
                 code: 'TMY-1998',
                 duration: 80,
                 rating: 5.0,
                 releaseDate: 'November, 10, 2021'
+             },
+                {
+                id: 4,
+                name: 'Botafogo',
+                imageUrl: '/assets/images/forms.png',
+                price: 49.99,
+                code: 'TMY-1998',
+                duration: 80,
+                rating: 5.0,
+                releaseDate: 'November, 10, 2021'
              }
-
 
 
 
