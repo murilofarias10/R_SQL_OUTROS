@@ -34,7 +34,7 @@ var COURSES: Course[] = [
                 code: 'TMY-1998',
                 duration: 80,
                 rating: 5.0,
-                releaseDate: 'November, 10, 2021'
+                releaseDate: 'Jan, 14, 2021'
              },
 
                 {
@@ -45,7 +45,7 @@ var COURSES: Course[] = [
                 code: 'TMY-1998',
                 duration: 80,
                 rating: 5.0,
-                releaseDate: 'November, 10, 2021'
+                releaseDate: 'Feb, 10, 2021'
              },
                 {
                 id: 4,
@@ -55,7 +55,7 @@ var COURSES: Course[] = [
                 code: 'TMY-1998',
                 duration: 80,
                 rating: 5.0,
-                releaseDate: 'November, 10, 2021'
+                releaseDate: 'March, 06, 2021'
              }
 
 
