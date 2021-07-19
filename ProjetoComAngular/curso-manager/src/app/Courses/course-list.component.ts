@@ -11,7 +11,7 @@ import {Course} from './course';
 import { CourseService } from "./course.service";
 
 @Component({
-        selector: 'app-course-list',
+      /*  selector: 'app-course-list', agora a referencia sera via link de rotas*/
     templateUrl : './course-list.component.html'
 })
 

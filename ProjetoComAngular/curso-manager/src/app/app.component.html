@@ -11,6 +11,15 @@
 <br><br> Arqui será alterado: {{name}}
 <br><br>
 -->
-<div class="container">
-    <app-course-list></app-course-list>
+<!-- ANTERIOR agora estamos utilizando utilizando link de rotas 
+<app-nav-bar></app-nav-bar>
+
+<div class="container mt-10">
+   <app-course-list></app-course-list> 
+</div>
+-->
+  
+<app-nav-bar></app-nav-bar>
+<div class="container mt-4">
+     <router-outlet></router-outlet>   
 </div>
