@@ -1,0 +1,90 @@
+body {
+    /* Zerando Margin e Padding da tela inicial */
+    margin: 0;
+    padding: 0;
+    background: #000000 url("estrelas.gif");
+}
+
+.texto_inicial {
+    color: blanchedalmond;
+}
+
+.globo {
+    /* Tamanho do globo terreste */
+    height: 100%;
+    width: 100%;
+}
+
+
+/* Homer Simpson */
+
+.homer {
+    position: relative;
+    /*posição eixo Y do Homer dentro do container do Homer  */
+    top: calc(50% - 100px);
+    /*posição eixo X dentro do container do Homer */
+    left: calc(50% - 100px);
+    /*Tamanho do Homer */
+    width: 200px;
+    /*Rotação do Homer */
+    transform: rotate(150deg);
+}
+
+
+/* Container do Homer Simpson */
+
+.containerHomer {
+    position: absolute;
+    /*Tamanho do Container do Homer */
+    width: 380px;
+    height: 380px;
+    /* calculando posição do container na tela "eixo Y" */
+    top: calc(50% + 189px);
+    /* calculando posição do container na tela "eixo X" */
+    left: calc(50% + 15px);
+    animation: rotação_container 10s linear infinite;
+    /* Ative este background parte para ajudar a entender o conceito 
+    background-color: black; */
+}
+
+@keyframes rotação_container {
+    0% {
+        /* Opção 1 para rotacionar o container  */
+        -webkit-transform: rotate(0);
+        transform-origin: top left;
+        /* Opção 2 para rotacionar o container  */
+        transform: rotate(0);
+        -webkit-transform-origin: top left;
+    }
+    100% {
+        /* Opção 1 para rotacionar o container  */
+        -webkit-transform: rotate(360deg);
+        transform-origin: top left;
+        /* Opção 2 para rotacionar o container  */
+        transform: rotate(360deg);
+        -webkit-transform-origin: top left;
+    }
+}
+
+
+/* extra: Incluindo Astronauta utilizando mesmo principios */
+
+.astronauta {
+    position: absolute;
+    width: 300px;
+    left: 900px;
+    top: 5px;
+    animation: astronauta 2s infinite;
+}
+
+@keyframes astronauta {
+    0% {
+        left: 900px;
+    }
+    50% {
+        left: 800px;
+    }
+    100% {
+        left: 900px;
+    }
+}
