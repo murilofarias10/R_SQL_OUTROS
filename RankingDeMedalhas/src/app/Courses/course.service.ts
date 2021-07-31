@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { cursorTo } from "readline";
 import { Course } from "./course";
 
 
@@ -171,3 +172,18 @@ var COURSES: Course[] = [
 
 ]
 
+var Aparecer = {
+    printConsoleLog:()=>{
+        console.log('teste da função')
+},
+    setInnerText:function(json){
+        document.getElementById("totalaparecer").innerText = JSON.stringify(json)      
+},
+}
+
+COURSES.forEach((item, pos) => {
+
+    COURSES[pos].totalmedal = item.price + item.bronze
+})
+
+Aparecer.setInnerText(COURSES)
