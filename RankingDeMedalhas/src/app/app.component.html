@@ -1,0 +1,25 @@
+<!-- 
+{{title}}
+<h1>Projeto Murilo com Angular</h1>
+
+<br>one way não altera:
+<input [ngModel]="name" name="name">
+<br>
+<br> Two way para alterar:
+<input [(ngModel)]="name" name="name">
+<br>
+<br><br> Arqui será alterado: {{name}}
+<br><br>
+-->
+<!-- ANTERIOR agora estamos utilizando utilizando link de rotas 
+<app-nav-bar></app-nav-bar>
+
+<div class="container mt-10">
+   <app-course-list></app-course-list> 
+</div>
+-->
+
+<app-nav-bar></app-nav-bar>
+<div class="container mt-4">
+    <router-outlet></router-outlet>
+</div>
