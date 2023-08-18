@@ -189,7 +189,6 @@ select * from tb_dsa_produtos
 order by Nome_Produto desc;
 
 -- MIN MAX AVR COUNT SUM
-
 -- menor valor de venda 0.556
 select * from tb_dsa_vendas
 order by Valor_Venda;
@@ -217,27 +216,23 @@ select Valor_Venda, count(Valor_Venda) from tb_dsa_vendas
 group by Valor_Venda
 order by count(Valor_Venda) desc;
 
+SELECT Valor_Venda as moda
+FROM tb_dsa_vendas
+GROUP BY Valor_Venda
+ORDER BY COUNT(Valor_Venda) DESC
+LIMIT 1;
+
+-- mediana 97,82
+SELECT AVG(Valor_Venda) AS Mediana
+FROM (
+    SELECT Valor_Venda, @rownum:=@rownum+1 AS `numero_linha`, @total_linhas:=@rownum
+    FROM tb_dsa_vendas, (SELECT @rownum:=0) r
+    ORDER BY Valor_Venda) AS ordenado
+WHERE numero_linha = CEIL(@total_linhas / 2);
+
+
 -- mediana 3.13
-SELECT
-    IF(COUNT(*) % 2 = 1,
-       SUBSTRING_INDEX(
-           SUBSTRING_INDEX(
-               GROUP_CONCAT(Valor_Venda ORDER BY Valor_Venda), ',', (COUNT(*) + 1) / 2
-           ),
-           ',', -1
-       ),
-       (SUBSTRING_INDEX(
-            SUBSTRING_INDEX(
-                GROUP_CONCAT(Valor_Venda ORDER BY Valor_Venda), ',', COUNT(*) / 2
-            ),
-            ',', -1
-        ) + SUBSTRING_INDEX(
-            SUBSTRING_INDEX(
-                GROUP_CONCAT(Valor_Venda ORDER BY Valor_Venda), ',', (COUNT(*) / 2) + 1
-            ),
-            ',', -1
-        )) / 2
-    ) AS Mediana
+
 FROM tb_dsa_vendas;
 
 select distinct Produto, 
