@@ -165,6 +165,7 @@ INSERT INTO lab1.vendas_loja_online (id_cliente, pais_cliente, visitas_ultimo_me
 
 SELECT DISTINCT * FROM lab1.vendas_loja_online
 SELECT * FROM lab1.resultado_murilo
+DROP TABLE lab1.resultado_murilo
 
 CREATE TABLE lab1.resultado_murilo
 AS
@@ -195,7 +196,7 @@ SELECT
 	CASE
 		WHEN fez_compra_mes_atual = true THEN 1
 	ELSE 0
-	END as Coluna_compras_mes_atual
+	END as Coluna_compras_mes_atual,
+	total_gasto_ultimo_mes
 FROM lab1.vendas_loja_online
 
-x
