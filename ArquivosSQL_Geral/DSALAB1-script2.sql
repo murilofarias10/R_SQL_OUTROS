@@ -197,3 +197,5 @@ SELECT
 	ELSE 0
 	END as Coluna_compras_mes_atual
 FROM lab1.vendas_loja_online
+
+x
