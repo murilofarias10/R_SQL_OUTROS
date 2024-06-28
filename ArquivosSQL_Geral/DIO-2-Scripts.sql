@@ -17,6 +17,8 @@ SELECT
     SELECT * FROM Album
     SELECT * FROM Artist
     
+
+       
    SELECT 
    	Album.ArtistId , Album.Title, Album.Column1, 
    	Artist.Name, Artist.ArtistId 
@@ -24,10 +26,52 @@ SELECT
    WHERE Album.ArtistId = Artist.ArtistId 
    AND Album.Column1 IS NULL
 
---Qual a quantidade de registros por artistas ? 
-   
-     SELECT 
-   	DISTINCT Artist.Name, COUNT(Artist.Name) 
-   FROM Album Album, Artist Artist
-   WHERE Album.ArtistId = Artist.ArtistId 
+--Qual a quantidade distintas de registros por artistas que esteja NULL Column1 ? 
+   -- Com duplicados 344 | Distintos 203 
+ 
+ SELECT COUNT(Name) AS TOTAL_LINHAS, COUNT(DISTINCT Name) AS TOTAL_DISTINTOS
+ 	FROM(
+		 SELECT 
+		 	Album.ArtistId, Album.Title, Album.Column1,
+		 	Artist.Name
+		 FROM Album Album, Artist Artist
+		 WHERE Album.ArtistId = Artist.ArtistId 
+		 AND Album.Column1 IS NULL
+)
 
+ SELECT Name, Title, Column1
+ 	FROM(
+		 SELECT 
+		 	Album.ArtistId, Album.Title, Album.Column1,
+		 	Artist.Name
+		 FROM Album Album, Artist Artist
+		 WHERE Album.ArtistId = Artist.ArtistId 
+		 AND Album.Column1 IS NULL
+)
+GROUP BY Name
+ORDER BY Name ASC 
+
+--Qual a quantidade de registros por artistas que não esteja NULL Column1 ? 
+   --Com duplicados 3 | Distintos 2
+
+ SELECT COUNT(Name) AS TOTAL_LINHAS, COUNT(DISTINCT Name) AS TOTAL_DISTINTOS
+ 	FROM(
+		 SELECT 
+		 	Album.ArtistId, Album.Title, Album.Column1,
+		 	Artist.Name
+		 FROM Album Album, Artist Artist
+		 WHERE Album.ArtistId = Artist.ArtistId 
+		 AND Album.Column1 IS NOT NULL
+)
+
+ SELECT Name, Title, Column1
+ 	FROM(
+		 SELECT 
+		 	Album.ArtistId, Album.Title, Album.Column1,
+		 	Artist.Name
+		 FROM Album Album, Artist Artist
+		 WHERE Album.ArtistId = Artist.ArtistId 
+		 AND Album.Column1 IS NOT NULL
+)
+GROUP BY Name
+ORDER BY Name ASC
