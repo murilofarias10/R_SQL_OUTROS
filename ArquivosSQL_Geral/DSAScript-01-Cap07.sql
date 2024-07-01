@@ -1,5 +1,7 @@
 -- junção de tabelas 
 
+SHOW Tables;
+
 -- Cria o schema no banco de dados
 CREATE SCHEMA cap07;
 
@@ -125,3 +127,48 @@ SELECT
 	p.quantidade
 FROM cap07.clientes c, cap07.pedidos p
 WHERE c.id_cliente = p.id_cliente
+
+-- Continuando agora utilizando o DBeaver 24.1.1
+--Retorn id, nome e estado do cliente, id e quantidade do pedido de todos os clientes que fizeram pedido
+--Ordene pelo id do cliente
+--Por que usamos INNER JOIN ?
+
+select 
+	c.id_cliente, c.nome, c.estado,
+	p.id_pedido, p.quantidade 
+from cap07.clientes c, cap07.pedidos p
+where c.id_cliente = p.id_cliente 
+order by c.id_cliente
+
+select 
+	c.id_cliente, c.nome, c.estado,
+	p.id_pedido, p.quantidade 
+from cap07.clientes c inner join cap07.pedidos p 
+on c.id_cliente  = p.id_cliente 
+order by c.id_cliente 
+
+--Qual o total de cliente com pedidos ? Resposta 6
+SELECT count(distinct(id_cliente)) as TOTAL_COM_PEDIDOS from (
+SELECT
+	c.id_cliente, c.nome, c.estado,
+	p.id_pedido, p.quantidade 
+from cap07.clientes c inner join cap07.pedidos p 
+on c.id_cliente  = p.id_cliente 
+order by c.id_cliente
+) as Subquerie;
+
+--Qual o total de cliente sem pedidos ? Resposta 10
+select count(distinct c.id_cliente) as TOTAL_SEM_PEDIDOS from cap07.clientes c 
+
+--Indique quais clientes não estão em pedidos ? Resoposta 4 clientes: 3,5,8,10
+select 
+	c.id_cliente as ID_CLIENTE_TABLE_CLIENTE, p.id_cliente as ID_CLIENTE_TABLE_PEDIDOS
+from cap07.clientes c 
+LEFT JOIN cap07.pedidos p on c.id_cliente = p.id_cliente 
+order by ID_CLIENTE_TABLE_PEDIDOS DESC
+
+select 
+	count(c.id_cliente)
+from cap07.clientes c 
+LEFT JOIN cap07.pedidos p on c.id_cliente = p.id_cliente 
+where p.id_cliente is null
