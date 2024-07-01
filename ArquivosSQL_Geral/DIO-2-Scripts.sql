@@ -217,4 +217,3 @@ WHERE FIRST_C = FIRST_E
 SELECT FirstName, LastName FROM Employee e WHERE FirstName = 'Steve' OR FirstName = 'Robert'
 
 SELECT FirstName, LastName FROM Customer c WHERE FirstName = 'Steve' OR FirstName = 'Robert'
-
