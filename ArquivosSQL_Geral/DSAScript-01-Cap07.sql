@@ -143,7 +143,8 @@ order by c.id_cliente
 select 
 	c.id_cliente, c.nome, c.estado,
 	p.id_pedido, p.quantidade 
-from cap07.clientes c inner join cap07.pedidos p 
+from cap07.clientes c 
+inner join cap07.pedidos p 
 on c.id_cliente  = p.id_cliente 
 order by c.id_cliente 
 
@@ -172,3 +173,47 @@ select
 from cap07.clientes c 
 LEFT JOIN cap07.pedidos p on c.id_cliente = p.id_cliente 
 where p.id_cliente is null
+
+-- Retorne id, nome, estado do cliente, id e quantidade do pedido de todos os clientes,
+--independente de ter feito pedido ou não
+--ordene pelo id do cliente
+SELECT 
+	c.id_cliente as id_table_cliente, c.nome, c.estado,
+	p.id_pedido as id_table_pedidos, p.quantidade, 
+	CASE
+		when p.id_pedido IS null then 'sem pedidos'
+		else cast (p.id_pedido as VARCHAR)
+	end as id_pedido
+FROM cap07.clientes c
+LEFT join cap07.pedidos p
+ON c.id_cliente = p.id_cliente 
+ORDER BY id_table_cliente
+
+SELECT 
+	c.id_cliente as id_table_cliente, c.nome, c.estado,
+		case
+		when p.quantidade is null then 'sem pedidos'
+		else cast(p.quantidade as VARCHAR) --convertendo o tipo de dado
+	end as quantidade,
+	CASE
+		when p.id_pedido IS null then 'sem pedidos'
+		else cast (p.id_pedido as VARCHAR) --convertendo o tipo de dado
+	end as id_pedido
+FROM cap07.clientes c
+LEFT join cap07.pedidos p
+ON c.id_cliente = p.id_cliente 
+ORDER BY id_table_cliente
+
+
+--selecionando somente os pedidos NULL
+select id_table_cliente, nome, id_table_pedidos, quantidade FROM(
+select  
+	c.id_cliente as id_table_cliente, c.nome, c.estado,
+	p.id_pedido as id_table_pedidos, p.quantidade 
+FROM cap07.clientes c
+LEFT join cap07.pedidos p
+ON c.id_cliente = p.id_cliente
+ORDER BY id_table_cliente
+) as SUBQUERIE
+where quantidade is null
+
