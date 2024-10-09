@@ -1,9 +1,7 @@
 # SQL Para Análise de Dados e Data Science - Capítulo 03
-
-
+--09/10/2024
 -- Cria o schema no banco de dados
 CREATE SCHEMA cap03 AUTHORIZATION dsa;
-
 
 -- Criando a tabela 'estudantes_dsa'
 CREATE TABLE cap03.estudantes_dsa (
@@ -14,7 +12,6 @@ CREATE TABLE cap03.estudantes_dsa (
     nota_exame2 DECIMAL(5, 2),
     tipo_sistema_operacional VARCHAR(20)
 );
-
 
 -- Inserindo 30 registros fictícios na tabela 'estudantes_dsa'
 INSERT INTO cap03.estudantes_dsa (nome, sobrenome, nota_exame1, nota_exame2, tipo_sistema_operacional) VALUES
@@ -48,3 +45,5 @@ INSERT INTO cap03.estudantes_dsa (nome, sobrenome, nota_exame1, nota_exame2, tip
 ('Karen', 'Peterson', 90.0, 92.5, 'Mac'),
 ('Dave', 'Brown', 88.5, 89.0, 'Windows'),
 ('Derek', 'Wood', 86.0, 87.5, 'Linux');
+
+SELECT * FROM cap03.estudantes_dsa;
