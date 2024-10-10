@@ -1,5 +1,22 @@
 # SQL Para Análise de Dados e Data Science - Capítulo 04
 
+--10/10/2024
+--1 Selecione todas as linhas e colunas da tabela
+	SELECT * FROM cap03.estudantes_dsa;
+	
+--2 Selecione nome e sobrenome de todos os estudantes
+	SELECT nome,sobrenome FROM cap03.estudantes_dsa;
+
+--3 Selecione tipo de sistema operacional, nota no exame 1 e nota no exame 2 de todos os estudantes
+	SELECT nome, sobrenome, tipo_sistema_operacional, nota_exame1, nota_exame2
+	FROM cap03.estudantes_dsa;
+
+--4 Selecione tipo de sistema operacional, nota exame1 ,nota exame 2 nome, e sobrenome todos
+--Nome e sobrenome devem estar em uma unica coluna mostrando nome completo
+	SELECT 
+		nome ||' '|| sobrenome as nome_completo,
+		tipo_sistema_operacional, nota_exame1, nota_exame2
+	FROM cap03.estudantes_dsa;
 
 -- FILTROS DE COLUNA
 
@@ -32,8 +49,43 @@ CONCAT(nome,' ',sobrenome) as nome_completo,
 tipo_sistema_operacional, nota_exame1, nota_exame2 
 from cap04.estudantes;
 
-
 -- FILTROS DE LINHA
+--10/10/2024
+--Selecione os 10 primeiros estudantes da tabela
+SELECT * FROM cap03.estudantes_dsa LIMIT 10;
+
+--Selecione todos os estudantes que conseguiram nota igual a 90 em nota_exame1
+SELECT nome, sobrenome, nota_exame1
+FROM cap04.estudantes
+WHERE nota_exame1 = 90;
+
+--Selecione todos os estudantes que conseguiram nota maior do queem nota_exame1
+SELECT nome, sobrenome, nota_exame1
+FROM cap04.estudantes
+WHERE nota_exame1 > 90;
+
+--Selecione somente os nomes dos estudantes que conseguiram nota menor do que 90 em nota exame 1
+--Ordene o resultado
+SELECT nome 
+FROM cap04.estudantes
+WHERE nota_exame1 < 90
+ORDER BY nome DESC; --resultado 18
+
+SELECT DISTINCT nome
+FROM cap04.estudantes
+WHERE nota_exame1 < 90
+ORDER BY nome DESC; --resultado 17
+
+SELECT DISTINCT nome, sobrenome
+FROM cap04.estudantes
+WHERE nota_exame1 < 90
+ORDER BY nome DESC; --resultado 18
+
+SELECT DISTINCT(nome), MIN(nota_Exame1) as maior_nota
+FROM cap03.estudantes_dsa
+WHERE nota_exame1 < 90
+GROUP BY nome
+ORDER BY nome;
 
 -- Selecione os 10 primeiros estudantes da tabela
 SELECT *

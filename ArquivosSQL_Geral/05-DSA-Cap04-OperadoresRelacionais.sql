@@ -2,20 +2,16 @@
 
 -- OPERADORES RELACIONAIS
 
-SELECT * 
-FROM cap04.estudantes
+SELECT * FROM cap04.estudantes
 WHERE nota_exame1 = 90;
 
-SELECT * 
-FROM cap04.estudantes
+SELECT * FROM cap04.estudantes
 WHERE nota_exame1 > 90;
 
-SELECT * 
-FROM cap04.estudantes
+SELECT * FROM cap04.estudantes
 WHERE nota_exame1 >= 90;
 
-SELECT * 
-FROM cap04.estudantes
+SELECT * FROM cap04.estudantes
 WHERE nota_exame2 <= 76.5;
 
 SELECT * 
@@ -40,11 +36,11 @@ WHERE 90 = 90;
 
 SELECT * 
 FROM cap04.estudantes
-WHERE nome = Xavier;
+WHERE nome = Xavier; --sem aspas
 
 SELECT * 
 FROM cap04.estudantes
-WHERE nome = 'xavier';
+WHERE nome = 'xavier'; --com minusculo
 
 SELECT * 
 FROM cap04.estudantes
@@ -52,7 +48,6 @@ WHERE nome = 'Xavier';
 
 
 -- OPERADORES LÓGICOS
-
 SELECT nome, nota_exame1, nota_exame2
 FROM cap04.estudantes
 WHERE nota_exame1 > 90 AND nota_exame2 > 90;
@@ -65,15 +60,20 @@ SELECT nome, nota_exame1, nota_exame2
 FROM cap04.estudantes
 WHERE NOT nota_exame1 > 90;
 
-SELECT nome, nota_exame1, nota_exame2
+SELECT nome, nota_exame1, nota_exame2, tipo_sistema_operacional
 FROM cap04.estudantes
 WHERE nota_exame1 > 90 AND nota_exame2 > 90 AND tipo_sistema_operacional = 'Windows';
 
 SELECT nome, nota_exame1, nota_exame2
 FROM cap04.estudantes
 WHERE (nota_exame1 > 90 OR nota_exame2 > 90) 
-  AND tipo_sistema_operacional = 'Linux';
+  AND tipo_sistema_operacional != 'Linux';
 
+SELECT nome, nota_exame1, nota_exame2
+FROM cap04.estudantes
+WHERE (nota_exame1 > 90 OR nota_exame2 > 90) 
+  AND NOT tipo_sistema_operacional = 'Linux'
+  
 SELECT nome, nota_exame1, nota_exame2
 FROM cap04.estudantes
 WHERE (nota_exame1 > 90 OR nota_exame2 > 90) 
@@ -86,8 +86,7 @@ WHERE (nota_exame1 > 90 OR nota_exame2 > 90)
   AND NOT nome IN ('Carol', 'Grace');
 
 
--- OUTROS OPERADORES RELACIONAIS
-
+-- OUTROS OPERADORES RELACIONAIS RETORNA VERDADEIRO OU FALSO
 -- OPERADOR IN
 
 SELECT nome, sobrenome, nota_exame1, tipo_sistema_operacional
@@ -130,12 +129,27 @@ FROM cap04.estudantes
 WHERE nome NOT LIKE 'A%'
 ORDER BY nome_completo;
 
-SELECT nome || ' ' || sobrenome AS nome_completo, 
+SELECT 
+	nome || ' ' || sobrenome AS nome_completo, 
        nota_exame1, 
 	   nota_exame2
 FROM cap04.estudantes
-WHERE nome NOT LIKE 'A%' AND NOT LIKE 'B%'
+WHERE nome NOT LIKE 'A%'
 ORDER BY nome_completo;
+
+
+SELECT nome_completo, nota_exame1, nota_exame2
+FROM (
+    SELECT nome || ' ' || sobrenome AS nome_completo, 
+           nota_exame1, 
+           nota_exame2
+    FROM cap04.estudantes
+    WHERE nome NOT LIKE 'A%'
+	ORDER BY nome_completo
+) AS SUBQUERIE_1
+WHERE nome_completo NOT LIKE 'B%'
+ORDER BY nome_completo;
+
 
 SELECT nome || ' ' || sobrenome AS nome_completo, 
        nota_exame1, 
@@ -146,7 +160,6 @@ ORDER BY nome_completo;
 
 
 -- OPERADOR BETWEEN
-
 SELECT nome || ' ' || sobrenome AS nome_completo, 
        nota_exame1, 
 	   nota_exame2
@@ -164,7 +177,8 @@ ORDER BY nome_completo;
 SELECT nome || ' ' || sobrenome AS nome_completo, 
        nota_exame1, 
 	   nota_exame2,
-	   'Aprovado' AS status
+	   tipo_sistema_operacional,
+	   'Aprovado' AS status --criando uma nova coluna com valor desejado
 FROM cap04.estudantes
 WHERE nota_exame1 BETWEEN 88 AND 90
   AND tipo_sistema_operacional IN ('Linux', 'Mac')
@@ -172,6 +186,9 @@ WHERE nota_exame1 BETWEEN 88 AND 90
   AND nota_exame2 != 80
 ORDER BY nome_completo;
 
+--LIMPAR TABELA TRUNCATE TABLE cap04.estudantes;
+
+***************
 SELECT 
     nome || ' ' || sobrenome AS nome_completo, 
     nota_exame1, 

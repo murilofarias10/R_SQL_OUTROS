@@ -1,10 +1,10 @@
 # SQL Para Análise de Dados e Data Science - Capítulo 04
 
-
+10/10/2024
 -- Cria o schema no banco de dados
 CREATE SCHEMA cap04 AUTHORIZATION dsa;
 
-
+--DDL
 -- Criando a tabela 'estudantes'
 CREATE TABLE cap04.estudantes (
     id SERIAL PRIMARY KEY,

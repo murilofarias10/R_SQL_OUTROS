@@ -10,7 +10,6 @@ CREATE TABLE cap04.funcionarios (
     data_contratacao DATE
 );
 
-
 -- Inserindo registros na tabela 'funcionarios'
 INSERT INTO cap04.funcionarios (nome, sobrenome, salario, departamento, data_contratacao) VALUES
 ('Alice', 'Martins', 6000, 'Engenharia', '2021-06-15'),
@@ -39,13 +38,26 @@ INSERT INTO cap04.funcionarios (nome, sobrenome, salario, departamento, data_con
 
 # Use SQL para responder às perguntas abaixo:
 
-# 1- Quem são os funcionários do departamento de Engenharia? Retorne nome e sobrenome.
+-- 1- Quem são os funcionários do departamento de Engenharia? Retorne nome e sobrenome.
+SELECT nome, sobrenome, departamento FROM cap04.funcionarios
+WHERE departamento = 'Engenharia' OR departamento = 'engenharia';
+
 select nome || ' ' || sobrenome as nome_completo, departamento 
 from cap04.funcionarios 
 where departamento = 'Engenharia' or departamento = 'engenharia'
 order by nome_completo;
 
 # 2- Quais funcionários foram contratados em 2021 ou depois? Retorne nome, sobrenome e data_contratacao.
+
+SELECT
+	nome, sobrenome, data_contratacao
+FROM cap04.funcionarios
+WHERE EXTRACT(YEAR FROM data_contratacao)>= 2021;
+
+	
+SELECT EXTRACT(YEAR FROM data_contratacao)
+FROM cap04.funcionarios;
+
 SELECT nome || ' ' || sobrenome AS nome_completo, data_contratacao 
 FROM cap04.funcionarios
 WHERE EXTRACT(YEAR FROM data_contratacao) >= 2021
@@ -56,6 +68,10 @@ FROM cap04.funcionarios
 WHERE EXTRACT(YEAR FROM data_contratacao) >= 2021;
 
 # 3- Quais funcionários recebem salário entre 5000 e 6000? Retorne nome, sobrenome, salario e departamento.
+SELECT nome, sobrenome, salario, departamento
+FROM cap04.funcionarios
+WHERE salario BETWEEN 5000 and 6000;
+
 SELECT nome || ' ' || sobrenome AS nome_completo, salario, departamento 
 FROM cap04.funcionarios
 where salario BETWEEN 5000 and 6000
@@ -63,6 +79,12 @@ order by salario desc;
 
 --select * from cap04.funcionarios where 1=0;
 # 4- Quais funcionários têm nome começando com a letra J ou com a letra B? Retorne nome, sobrenome e departamento.
+SELECT nome, sobrenome, departamento 
+FROM cap04.funcionarios
+WHERE nome LIKE 'B%' 
+OR nome LIKE 'J%';
+
+
 SELECT nome || ' ' || sobrenome AS nome_completo, departamento
 FROM cap04.funcionarios
 WHERE nome LIKE 'j%' OR nome LIKE 'J%' OR nome LIKE 'b%' OR nome LIKE 'B%';
@@ -74,6 +96,12 @@ AND sobrenome = 'Oliveira';
 
 
 # 5- Há algum funcionário cujo sobrenome tenha as letras 've', seja do departamento de Marketing e o salário seja maior do que 5500?
+SELECT nome, sobrenome, departamento, salario FROM cap04.funcionarios
+WHERE departamento = 'Marketing'
+AND salario = 5500
+AND sobrenome LIKE '%ve%';
+
+
 select * from cap04.funcionarios 
 where salario > 5500
 AND (departamento = 'Marketing' or departamento = 'marketing')
