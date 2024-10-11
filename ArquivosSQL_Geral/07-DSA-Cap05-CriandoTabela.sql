@@ -1,9 +1,7 @@
 # SQL Para Análise de Dados e Data Science - Capítulo 05
 
-
 -- Cria o schema no banco de dados
 CREATE SCHEMA cap05 AUTHORIZATION dsa;
-
 
 -- Cria a tabela
 CREATE TABLE cap05.dsa_vendas (
@@ -33,6 +31,3 @@ INSERT INTO cap05.dsa_vendas (Data_Venda, Nome_Produto, Categoria_Produto, Unida
 ('2023-11-12', 'Produto B', 'Categoria 1', 5, 19.50),
 ('2023-11-14', 'Produto A', 'Categoria 2', 5, 12.50),
 ('2023-11-16', 'Produto E', 'Categoria 3', 7, 14.50);
-
-
-

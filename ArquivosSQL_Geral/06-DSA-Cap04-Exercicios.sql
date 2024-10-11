@@ -54,6 +54,8 @@ SELECT
 FROM cap04.funcionarios
 WHERE EXTRACT(YEAR FROM data_contratacao)>= 2021;
 
+SELECT nome, sobrenome, data_contratacao FROM cap04.funcionarios
+WHERE data_contratacao >= '2021-01-01'
 	
 SELECT EXTRACT(YEAR FROM data_contratacao)
 FROM cap04.funcionarios;
@@ -67,6 +69,7 @@ SELECT COUNT(*) AS total_funcionarios_contratados_desde_2021
 FROM cap04.funcionarios
 WHERE EXTRACT(YEAR FROM data_contratacao) >= 2021;
 
+
 # 3- Quais funcionários recebem salário entre 5000 e 6000? Retorne nome, sobrenome, salario e departamento.
 SELECT nome, sobrenome, salario, departamento
 FROM cap04.funcionarios
@@ -77,7 +80,9 @@ FROM cap04.funcionarios
 where salario BETWEEN 5000 and 6000
 order by salario desc;
 
+-- trazer somente os titulos 
 --select * from cap04.funcionarios where 1=0;
+
 # 4- Quais funcionários têm nome começando com a letra J ou com a letra B? Retorne nome, sobrenome e departamento.
 SELECT nome, sobrenome, departamento 
 FROM cap04.funcionarios
@@ -112,11 +117,3 @@ from cap04.funcionarios
 where salario > 5500
 AND (departamento = 'Marketing' or departamento = 'marketing')
 AND sobrenome like '%ira%'; 
-
-
-
-
-
-
-
-

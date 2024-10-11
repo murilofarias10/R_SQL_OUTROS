@@ -1,7 +1,10 @@
 # SQL Para Análise de Dados e Data Science - Capítulo 05
-
+--11/10/2024
 
 -- Query SQL para retornar a média de Valor_Unitario_Venda.
+SELECT ROUND(AVG(valor_unitario_venda),2) as Media_Valor_Unitario_Vendas 
+FROM cap05.dsa_vendas;
+
 SELECT AVG(Valor_Unitario_Venda) AS Media_Valor_Unitario
 FROM cap05.dsa_vendas;
 
@@ -18,14 +21,20 @@ ROUND(avg(valor_unitario_venda),2)
 as media_valor_unitario_venda
 from cap05.dsa_vendas;
 
-
-
 SELECT ROUND(AVG(Valor_Unitario_Venda), 2) AS Media_Valor_Unitario
 FROM cap05.dsa_vendas;
 
 
--- Query SQL para retornar a contagem, 
---valor mínimo, valor máximo e soma (total) de Valor_Unitario_Venda.
+-- Query SQL para retornar a 
+--contagem, valor mínimo, valor máximo e soma (total) de Valor_Unitario_Venda.
+SELECT * FROM cap05.dsa_vendas where 1 = 0;
+
+SELECT
+	COUNT(*) as contagem,
+	MIN(valor_unitario_venda) as valor_minimo_venda,
+	MAX(valor_unitario_venda) as valor_maximo_venda,
+	SUM(valor_unitario_venda) as soma_venda
+FROM cap05.dsa_vendas;
 
 SELECT
 COUNT(Valor_Unitario_Venda) as Contagem_Total,
@@ -41,7 +50,15 @@ SELECT
     SUM(Valor_Unitario_Venda) AS Soma_Total
 FROM cap05.dsa_vendas;
 
--- Query SQL para retornar a média (com duas casas decimais) de Valor_Unitario_Venda por categoria de produto.
+-- Query SQL para retornar a média (com duas casas decimais) de 
+--Valor_Unitario_Venda por categoria de produto.
+SELECT
+	ROUND(AVG(valor_unitario_venda),2) as media_vendas,
+	categoria_produto
+FROM cap05.dsa_vendas
+GROUP BY categoria_produto
+ORDER BY media_vendas DESC;
+
 select 
 	nome_produto,
 	categoria_produto,
@@ -49,7 +66,6 @@ select
 from cap05.dsa_vendas
 group by categoria_produto, nome_produto
 order by categoria_produto, nome_produto;
-
 
 SELECT 
     Categoria_Produto,
@@ -71,6 +87,7 @@ GROUP BY Categoria_Produto;
 
 -- Query SQL para retornar a média (com duas casas decimais) de Valor_Unitario_Venda por categoria de produto, 
 -- ordenado pela média em ordem decrescente.
+
 SELECT 
     Categoria_Produto,
     ROUND(AVG(Valor_Unitario_Venda), 2) AS Media_Valor_Unitario
@@ -80,6 +97,12 @@ ORDER BY Media_Valor_Unitario DESC;
 
 
 -- Query SQL para retornar a soma de Valor_Unitario_Venda por produto. 
+SELECT 
+	SUM(valor_unitario_venda) as soma_vendas,
+	nome_produto
+FROM cap05.dsa_vendas
+GROUP BY nome_produto
+ORDER BY soma_vendas DESC;
 
 select
 nome_produto,
@@ -97,7 +120,15 @@ GROUP BY Nome_Produto;
 
 
 -- Query SQL para retornar a soma de Valor_Unitario_Venda por produto e categoria.
---(Leia a mensagem de erro ao executar)
+SELECT * FROM cap05.dsa_vendas where 1 = 0;
+SELECT
+	SUM(valor_unitario_venda) as soma_valor_venda,
+	nome_produto,
+	categoria_produto
+FROM cap05.dsa_vendas
+GROUP BY categoria_produto, nome_produto
+ORDER BY soma_valor_venda DESC;
+
 select * from cap05.dsa_vendas where 1=0;
 
 select
@@ -128,7 +159,10 @@ GROUP BY Nome_Produto, Categoria_Produto
 ORDER BY Nome_Produto, Categoria_Produto;
 
 
--- Query SQL para retornar a soma de Valor_Unitario_Venda por categoria e produto, ordenado por categoria e produto.
+-- Query SQL para retornar a soma de Valor_Unitario_Venda por categoria e produto, 
+--ordenado por categoria e produto.
+
+
 SELECT 
     Categoria_Produto,
     Nome_Produto,
@@ -141,6 +175,19 @@ ORDER BY Categoria_Produto, Nome_Produto;
 -- Query SQL para retornar a média (com duas casas decimais) 
 --de Valor_Unitario_Venda por produto, 
 -- somente se a média for maior ou igual a 16. 
+SELECT * FROM cap05.dsa_vendas where 1 = 0;
+
+--Trazendo quando a media é maior ou igual a 16
+SELECT 	nome_produto, media_vendas
+FROM(
+	SELECT
+		nome_produto,
+		ROUND(AVG(valor_unitario_venda),2) as media_vendas
+	FROM cap05.dsa_vendas
+	GROUP BY nome_produto
+)as subquerie
+WHERE media_vendas >=16
+ORDER BY media_vendas DESC;
 
 SELECT 
     nome_produto,
@@ -149,6 +196,15 @@ FROM cap05.dsa_vendas
 GROUP BY nome_produto
 HAVING AVG(valor_unitario_venda) >= 16
 ORDER BY media_valor desc ;
+
+--Trazendo quando a venda em si é maior ou igual a 16
+SELECT
+	nome_produto,
+	ROUND(AVG(valor_unitario_venda),2) as media_vendas
+FROM cap05.dsa_vendas
+WHERE valor_unitario_venda >=16
+GROUP BY nome_produto
+ORDER BY media_vendas DESC;
 
 -- Errado:
 SELECT 
@@ -166,10 +222,49 @@ FROM cap05.dsa_vendas
 GROUP BY Nome_Produto
 HAVING AVG(Valor_Unitario_Venda) >= 16;
 
+--Query SQL para retornar a media de valor_unitario_venda por produto,
+--Somente se a media for maior do que 5 e categoria de produtos for 1 ou 2
+SELECT
+	nome_produto,
+	categoria_produto,
+	ROUND(AVG(valor_unitario_venda),2) as media_valor_venda
+FROM cap05.dsa_vendas
+GROUP BY categoria_produto, nome_produto
+HAVING (AVG(valor_unitario_venda)) >5 
+AND (categoria_produto = 'Categoria 1' OR categoria_produto = 'Categoria 2')
+ORDER BY categoria_produto, media_valor_venda DESC, nome_produto; 
+
+SELECT
+	nome_produto,
+	ROUND(AVG(valor_unitario_venda),2) as media_valor_venda
+FROM cap05.dsa_vendas
+WHERE categoria_produto IN ('Categoria 1','Categoria 2')
+GROUP BY nome_produto
+HAVING (AVG(valor_unitario_venda)) >5 
+
+--agora usando SUBQUERIE
+--Query SQL para retornar a media de valor_unitario_venda por produto,
+--Somente se a media for maior do que 5 e categoria de produtos for 1 ou 2
+SELECT * FROM cap05.dsa_vendas where 1 = 0;
+
+SELECT
+	nome_produto,
+	ROUND(AVG(valor_unitario_venda),2) as valor_medio_vendas
+FROM(
+	SELECT
+		nome_produto, valor_unitario_venda
+	FROM cap05.dsa_vendas
+	WHERE categoria_produto IN ('Categoria 1', 'Categoria 2')
+	) as SUBQUERIE_1
+GROUP BY nome_produto
+HAVING AVG(valor_unitario_venda) >5;
+
 -- Query SQL para retornar a média (com duas casas decimais)
 --de Valor_Unitario_Venda por produto e categoria, 
 -- somente se a média for maior ou igual a 16 e
 --unidades vendidas maior do que 4, ordenado por nome de produto.
+
+
 select * from cap05.dsa_vendas where 1 = 0;
 
 
@@ -229,5 +324,8 @@ GROUP BY Nome_Produto, Categoria_Produto
 HAVING AVG(Valor_Unitario_Venda) >= 16
 ORDER BY Categoria_Produto;
 
+--*****************************
+--Query SQL que retorne somente registros cuja media de unidades vendidas seja maior do que 2.
+--Desse resultado, retorno os produtos cuja media de vendas foi maior do que 15
 
 
