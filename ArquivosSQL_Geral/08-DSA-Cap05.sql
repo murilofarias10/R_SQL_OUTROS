@@ -326,6 +326,57 @@ ORDER BY Categoria_Produto;
 
 --*****************************
 --Query SQL que retorne somente registros cuja media de unidades vendidas seja maior do que 2.
---Desse resultado, retorno os produtos cuja media de vendas foi maior do que 15
+--Desse resultado, retorne os produtos cuja media de vendas foi maior ou igual do que 15
+SELECT * FROM cap05.dsa_vendas LIMIT 10;
+
+SELECT
+	nome_produto,
+	ROUND(AVG(valor_unitario_venda),2) as media_venda
+	FROM(
+		SELECT
+		nome_produto,
+		valor_unitario_venda,
+		unidades_vendidas
+		FROM cap05.dsa_vendas
+		GROUP BY nome_produto, valor_unitario_venda, unidades_vendidas
+		HAVING(AVG(unidades_vendidas)) > 2
+		ORDER BY valor_unitario_venda DESC, nome_produto
+		) AS SUBQUERY_1
+GROUP BY nome_produto, valor_unitario_venda
+HAVING (AVG(valor_unitario_venda))>= 15
+ORDER BY media_venda DESC, nome_produto;
+		
+--Query SQL que retorne somente registros cuja media de unidades vendidas seja maior do que 2.
+--Desse resultado, retorne os produtos cuja media de vendas foi maior ou igual do que 15
+--Agora somenta registros se categoria de produtos for 1 ou 2
+SELECT * FROM cap05.dsa_vendas LIMIT 10;
+
+SELECT
+	nome_produto,
+	categoria_produto,
+	media_Venda
+FROM(
+	SELECT
+		nome_produto,
+		categoria_produto,
+		ROUND(AVG(valor_unitario_venda),2) as media_venda
+		FROM(
+			SELECT
+			nome_produto,
+			categoria_produto,
+			valor_unitario_venda,
+			unidades_vendidas
+			FROM cap05.dsa_vendas
+			GROUP BY nome_produto, categoria_produto, valor_unitario_venda, unidades_vendidas
+			HAVING(AVG(unidades_vendidas)) > 2
+			ORDER BY valor_unitario_venda DESC, nome_produto
+			) AS SUBQUERY_1
+	GROUP BY nome_produto, categoria_produto, valor_unitario_venda
+	HAVING (AVG(valor_unitario_venda))>= 15
+	ORDER BY media_venda DESC, nome_produto
+	) AS SUBQUERY_2	
+GROUP BY nome_produto, categoria_produto, media_venda
+HAVING categoria_produto IN ('Categoria 1', 'Categoria 2')
+ORDER BY media_venda DESC;
 
 
