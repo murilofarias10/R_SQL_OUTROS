@@ -351,32 +351,131 @@ ORDER BY media_venda DESC, nome_produto;
 --Agora somenta registros se categoria de produtos for 1 ou 2
 SELECT * FROM cap05.dsa_vendas LIMIT 10;
 
+--Murilo
 SELECT
 	nome_produto,
-	categoria_produto,
 	media_Venda
 FROM(
 	SELECT
 		nome_produto,
-		categoria_produto,
 		ROUND(AVG(valor_unitario_venda),2) as media_venda
 		FROM(
 			SELECT
 			nome_produto,
-			categoria_produto,
-			valor_unitario_venda,
-			unidades_vendidas
+			Valor_Unitario_Venda
 			FROM cap05.dsa_vendas
-			GROUP BY nome_produto, categoria_produto, valor_unitario_venda, unidades_vendidas
+			WHERE categoria_produto IN ('Categoria 1', 'Categoria 2')
+			GROUP BY nome_produto, Valor_Unitario_Venda
 			HAVING(AVG(unidades_vendidas)) > 2
-			ORDER BY valor_unitario_venda DESC, nome_produto
+			ORDER BY nome_produto
 			) AS SUBQUERY_1
-	GROUP BY nome_produto, categoria_produto, valor_unitario_venda
+	GROUP BY nome_produto
 	HAVING (AVG(valor_unitario_venda))>= 15
 	ORDER BY media_venda DESC, nome_produto
 	) AS SUBQUERY_2	
-GROUP BY nome_produto, categoria_produto, media_venda
-HAVING categoria_produto IN ('Categoria 1', 'Categoria 2')
+GROUP BY nome_produto, media_Venda
 ORDER BY media_venda DESC;
 
+--Tutor
+SELECT
+	Nome_Produto,
+	ROUND(AVG(Valor_Unitario_Venda), 2) AS Media_Valor_Unitario
+FROM(
+	SELECT Nome_Produto, Valor_Unitario_Venda
+	FROM cap05.dsa_vendas
+	WHERE Categoria_produto IN ('Categoria 1', 'Categoria 2')
+	GROUP BY Nome_Produto, Valor_Unitario_Venda
+	HAVING AVG(unidades_vendidas) > 2
+	) as sub_query
+GROUP BY Nome_Produto
+HAVING AVG(Valor_Unitario_Venda) > 15
 
+--Query para retornar o valor total final de vendas por dia
+SELECT * FROM cap05.dsa_vendas where 1 = 0; 
+
+SELECT
+	EXTRACT(DAY FROM data_venda) as dia,
+	EXTRACT(MONTH FROM data_venda) as mes,
+	EXTRACT(YEAR FROM data_venda) as ano,
+	SUM(valor_total)
+	FROM(
+SELECT
+	data_venda,
+	(unidades_vendidas * valor_unitario_venda) as valor_total
+FROM cap05.dsa_vendas
+GROUP BY data_venda, valor_total --dia, valor_total
+ORDER BY data_venda DESC
+)as subquery
+GROUP BY data_Venda
+ORDER BY data_venda DESC
+
+SELECT
+	data_venda,
+	SUM(unidades_vendidas * valor_unitario_venda) as valor_total
+FROM cap05.dsa_vendas
+GROUP BY data_venda
+ORDER BY data_venda DESC
+
+--Query retornar a media do valor total final de vendas por mes
+SELECT
+	mes,
+	ROUND(AVG(media_venda_mes),2) as media
+		FROM(
+			SELECT
+			EXTRACT (MONTH FROM data_venda) as mes,
+			ROUND(AVG(valor_total),2) as media_venda_mes
+				FROM(
+					SELECT
+					data_venda,
+					(unidades_vendidas * valor_unitario_Venda) as valor_total
+					FROM cap05.dsa_vendas
+					GROUP BY data_venda, valor_total
+					ORDER BY data_venda DESC
+				)as subquery
+			GROUP BY data_venda
+			ORDER BY data_venda 
+		) as subquery2
+	GROUP BY mes
+	ORDER BY mes
+	
+
+SELECT
+    EXTRACT(MONTH FROM data_venda) AS mes,
+    ROUND(AVG(unidades_vendidas * valor_unitario_venda), 2) AS media
+FROM cap05.dsa_vendas
+GROUP BY mes
+ORDER BY mes;
+
+--Query para retornar a media do valor total final de venda no dia 1 de cada mes
+SELECT * FROM cap05.dsa_vendas limit 10;
+
+SELECT
+	EXTRACT(MONTH FROM data_venda) as mes,
+	EXTRACT(DAY FROM data_venda) as dia,
+	ROUND(AVG(unidades_vendidas * valor_unitario_venda),2) as media_total_vendas,
+	COUNT(*) as total_linhas
+FROM cap05.dsa_vendas
+WHERE EXTRACT (DAY FROM data_venda) = 1
+GROUP BY dia, mes;
+
+--Query SQL para retornar a media do valor total final de venda entra os dias 10 e 20 de cada mes
+SELECT
+	EXTRACT(YEAR FROM data_venda) as ano,
+	EXTRACT(MONTH FROM data_venda) as mes,
+	ROUND(AVG(unidades_vendidas * valor_unitario_venda),2) as media_total_vendas,
+	COUNT(*) as total_linhas
+FROM cap05.dsa_vendas
+WHERE EXTRACT (DAY FROM data_venda) BETWEEN 10 AND 20
+GROUP BY ano, mes
+
+SELECT mes, ROUND(SUM(media_total_vendas)/COUNT(*),2) as soma_media_por_mes FROM(
+SELECT
+	EXTRACT(MONTH FROM data_venda) as mes,
+	EXTRACT(DAY FROM data_venda) as dia,
+	ROUND(AVG(unidades_vendidas * valor_unitario_venda),2) as media_total_vendas,
+	COUNT(*) as total_linhas
+FROM cap05.dsa_vendas
+WHERE EXTRACT (DAY FROM data_venda) BETWEEN 10 AND 20
+GROUP BY mes, dia
+) as SUBQUERY
+GROUP BY mes
