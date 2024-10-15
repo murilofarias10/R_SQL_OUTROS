@@ -27,6 +27,18 @@ INSERT INTO cap05.fornecedores (nome, cidade, estado, email, data_registro) VALU
 
 
 # Use SQL para responder às perguntas abaixo:
+-- Pergunta 1: Qual é a quantidade de fornecedores por estado?
+-- Pergunta 2: Qual é o estado com o maior número de fornecedores?
+-- Pergunta 3: Quantos fornecedores foram registrados no mês de Setembro de 2023?
+-- Pergunta 4: Qual é a média de registros de fornecedores por mês?
+-- Pergunta 5: Qual é o fornecedor mais recente registrado?
+
+
+
+
+
+
+
 
 
 -- Pergunta 1: Qual é a quantidade de fornecedores por estado?

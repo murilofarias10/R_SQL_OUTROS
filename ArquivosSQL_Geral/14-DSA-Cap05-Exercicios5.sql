@@ -33,6 +33,22 @@ INSERT INTO cap05.vendas (data_venda, valor, id_produto) VALUES
 
 
 # Use SQL para responder às perguntas abaixo:
+-- Pergunta 1: Qual é o total de vendas por produto?
+-- Pergunta 2: Quantos produtos diferentes foram vendidos?
+-- Pergunta 3: Qual é o total de vendas por dia?
+-- Pergunta 4: Em quais dias o valor total de vendas foi superior a $100?
+-- Pergunta 5: Quais produtos tiveram um valor total de vendas superior a $50?
+
+
+
+
+
+
+
+
+
+
+
 
 
 -- Pergunta 1: Qual é o total de vendas por produto?

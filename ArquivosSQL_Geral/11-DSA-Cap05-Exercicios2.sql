@@ -32,6 +32,22 @@ INSERT INTO cap05.clientes (nome, email, cidade, estado, data_nascimento) VALUES
 
 
 # Use SQL para responder às perguntas abaixo:
+
+
+-- Pergunta 1: Quantos clientes estão registrados por estado?
+-- Pergunta 2: Qual é a idade média dos clientes?
+-- Pergunta 3: Quantos clientes têm mais de 30 anos?
+-- Pergunta 4: Quais são as 3 cidades com o maior número de clientes?
+-- Pergunta 5: Quantos clientes têm um endereço de e-mail registrado?
+
+
+
+
+
+
+
+
+
 -- Pergunta 1: Quantos clientes estão registrados por estado?
 SELECT
 	estado, COUNT(nome) as total

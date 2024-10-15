@@ -32,6 +32,15 @@ INSERT INTO cap05.produtos (nome, preco, quantidade, categoria, data_criacao) VA
 
 
 # Use SQL para responder às perguntas abaixo:
+-- Pergunta 1: Qual é o valor total de produtos em estoque por categoria?
+-- Pergunta 2: Qual é a quantidade média de produtos em estoque por categoria?
+-- Pergunta 3: Qual é o preço médio dos produtos por categoria?
+-- Pergunta 4: Qual é o número total de categorias de produtos?
+-- Pergunta 5: Qual é a categoria com a maior quantidade de produtos em estoque?
+
+
+
+
 
 
 -- Pergunta 1: Qual é o valor total de produtos em estoque por categoria?
