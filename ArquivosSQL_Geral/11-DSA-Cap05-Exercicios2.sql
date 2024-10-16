@@ -1,6 +1,5 @@
 # SQL Para Análise de Dados e Data Science - Capítulo 05
 
-
 -- Criando a tabela 'clientes'
 CREATE TABLE cap05.clientes (
     id SERIAL PRIMARY KEY,
@@ -10,7 +9,6 @@ CREATE TABLE cap05.clientes (
     estado VARCHAR(2),
     data_nascimento DATE
 );
-
 
 -- Inserindo registros na tabela 'clientes'
 INSERT INTO cap05.clientes (nome, email, cidade, estado, data_nascimento) VALUES
@@ -32,73 +30,65 @@ INSERT INTO cap05.clientes (nome, email, cidade, estado, data_nascimento) VALUES
 
 
 # Use SQL para responder às perguntas abaixo:
-
-
--- Pergunta 1: Quantos clientes estão registrados por estado?
--- Pergunta 2: Qual é a idade média dos clientes?
--- Pergunta 3: Quantos clientes têm mais de 30 anos?
--- Pergunta 4: Quais são as 3 cidades com o maior número de clientes?
--- Pergunta 5: Quantos clientes têm um endereço de e-mail registrado?
-
-
-
-
-
-
-
-
-
+--16/10/2024:
 -- Pergunta 1: Quantos clientes estão registrados por estado?
 SELECT
-	estado, COUNT(nome) as total
+	estado,
+	COUNT(nome) as contagem_total
 FROM cap05.clientes
-GROUP BY estado;
+GROUP BY estado
+ORDER BY contagem_total;
+
 
 -- Pergunta 2: Qual é a idade média dos clientes?
 SELECT
-	nome,
-	EXTRACT(YEAR FROM data_nascimento),
-	EXTRACT(YEAR FROM CURRENT_DATE) AS ano_atual,
-	EXTRACT(YEAR FROM CURRENT_DATE) - EXTRACT(YEAR FROM data_nascimento) as idade
-FROM cap05.clientes;
+	COUNT(nome) as total_clientes,
+	ROUND(AVG(idade),0) as media_idade_clientes
+	FROM(
+		SELECT 
+			nome, 
+			EXTRACT(YEAR FROM data_nascimento) as ano_nascimento, 
+			EXTRACT(YEAR FROM CURRENT_DATE) as ano_atual,
+			(EXTRACT(YEAR FROM CURRENT_DATE) - EXTRACT(YEAR FROM data_nascimento))  as idade
+		FROM cap05.clientes
+	) as SUBQUERY
 
-
-SELECT
-	ROUND(AVG(EXTRACT(YEAR FROM CURRENT_DATE) - EXTRACT(YEAR FROM data_nascimento)),0) as media_idade
-FROM cap05.clientes;
-
-SELECT ROUND(AVG(EXTRACT(YEAR FROM (AGE(current_date, data_nascimento)))),0) as idade
-FROM cap05.clientes;
+SELECT ROUND(AVG(EXTRACT(YEAR FROM AGE(current_date, data_nascimento))),0) as media_idade
+FROM cap05.clientes
 
 -- Pergunta 3: Quantos clientes têm mais de 30 anos?
 SELECT
-	COUNT(nome)
-FROM cap05.clientes
-WHERE EXTRACT(YEAR FROM CURRENT_DATE) - EXTRACT(YEAR FROM data_nascimento) > 30;
-
+	count(nome) as clientes_com_mais_de_30_anos
+	FROM(
+		SELECT 
+			nome, 
+			(EXTRACT(YEAR FROM CURRENT_DATE) - EXTRACT(YEAR FROM data_nascimento))  as idade
+		FROM cap05.clientes
+		WHERE ((EXTRACT(YEAR FROM CURRENT_DATE) - EXTRACT(YEAR FROM data_nascimento))) >30
+	) as SUBQUERY
+	
+	
 -- Pergunta 4: Quais são as 3 cidades com o maior número de clientes?
+SELECT * FROM cap05.clientes where 1 = 0;
 SELECT
 	cidade,
-	COUNT(cidade)
+	COUNT(nome) as total_clientes
 FROM cap05.clientes
 GROUP BY cidade
-ORDER BY cidade
-LIMIT 3;
+ORDER BY total_clientes DESC
 
 -- Pergunta 5: Quantos clientes têm um endereço de e-mail registrado?
-SELECT
-	count(email) as total
-FROM(
-SELECT
-    email,
-    COUNT(email)
-FROM cap05.clientes
-WHERE 
-	email IS NOT NULL AND email != ''
-GROUP BY email
-	) AS subquerie
+SELECT COUNT(email) as total_geral FROM cap05.clientes
 
+SELECT COUNT(email) as total_com_email FROM(
+	SELECT 
+		nome, email
+	FROM cap05.clientes
+	WHERE email like '%@%'
+) as SUBQUERY
 
-
-
-
+SELECT 
+    COUNT(*) AS total_geral,
+    COUNT(CASE WHEN email != '' THEN 1 END) AS total_com_email,
+    COUNT(CASE WHEN email = '' THEN 1 END) AS total_sem_email
+FROM cap05.clientes;
