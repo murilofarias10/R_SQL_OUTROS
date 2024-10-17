@@ -1,6 +1,4 @@
 # SQL Para Análise de Dados e Data Science - Capítulo 05
-
-
 -- Criando a tabela 'produtos'
 CREATE TABLE cap05.produtos (
     id SERIAL PRIMARY KEY,
@@ -10,7 +8,6 @@ CREATE TABLE cap05.produtos (
     categoria VARCHAR(255),
     data_criacao DATE
 );
-
 
 -- Inserindo registros na tabela 'produtos'
 INSERT INTO cap05.produtos (nome, preco, quantidade, categoria, data_criacao) VALUES
@@ -30,18 +27,40 @@ INSERT INTO cap05.produtos (nome, preco, quantidade, categoria, data_criacao) VA
 ('Produto N', 55.00, 50, 'Categoria 4', '2023-01-14'),
 ('Produto O', 20.00, 130, 'Categoria 5', '2023-01-15');
 
-
+--17/10/2024
 # Use SQL para responder às perguntas abaixo:
 -- Pergunta 1: Qual é o valor total de produtos em estoque por categoria?
+SELECT 
+	categoria,
+	SUM((preco * quantidade)) as valor_total
+FROM cap05.produtos
+GROUP BY categoria
+ORDER BY valor_total DESC;
+
 -- Pergunta 2: Qual é a quantidade média de produtos em estoque por categoria?
+SELECT 
+	categoria,
+	ROUND(AVG(quantidade),0) as media_quantidade
+FROM cap05.produtos
+GROUP BY categoria
+ORDER BY categoria
+
 -- Pergunta 3: Qual é o preço médio dos produtos por categoria?
+SELECT 
+	categoria,
+	ROUND(AVG(preco),2) as media_preco
+FROM cap05.produtos
+GROUP BY categoria
+ORDER BY media_preco DESC
+
 -- Pergunta 4: Qual é o número total de categorias de produtos?
+SELECT COUNT(DISTINCT categoria) as total_categorias FROM cap05.produtos;
+
 -- Pergunta 5: Qual é a categoria com a maior quantidade de produtos em estoque?
-
-
-
-
-
+SELECT categoria, SUM(quantidade) as total_produtos
+FROM cap05.produtos
+GROUP BY categoria
+ORDER BY total_produtos DESC;
 
 -- Pergunta 1: Qual é o valor total de produtos em estoque por categoria?
 SELECT
@@ -72,7 +91,6 @@ SELECT
 	COUNT (DISTINCT categoria) AS total_categorias
 FROM cap05.produtos;
 
-
 -- Pergunta 5: Qual é a categoria com a maior quantidade de produtos em estoque?
 SELECT
 	categoria,
@@ -81,11 +99,3 @@ FROM cap05.produtos
 GROUP BY categoria
 ORDER BY quantidade_total DESC
 LIMIT 1;
-
-
-
-
-
-
-
-
