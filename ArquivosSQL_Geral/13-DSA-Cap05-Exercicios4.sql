@@ -25,21 +25,68 @@ INSERT INTO cap05.fornecedores (nome, cidade, estado, email, data_registro) VALU
 ('Fornecedor 9', 'Goiânia', 'GO', 'fornecedor9@exemplo.dsa.com', '2023-10-09'),
 ('Fornecedor 10', 'Manaus', 'AM', 'fornecedor10@exemplo.dsa.com', '2023-10-10');
 
-
+--18/10/2024
 # Use SQL para responder às perguntas abaixo:
 -- Pergunta 1: Qual é a quantidade de fornecedores por estado?
+SELECT 
+	estado,
+	COUNT(*) as quantidade_total
+FROM cap05.fornecedores
+GROUP BY estado;
+	
 -- Pergunta 2: Qual é o estado com o maior número de fornecedores?
+SELECT 
+	estado,
+	COUNT(nome) as quantidade_total
+FROM cap05.fornecedores
+GROUP BY estado
+ORDER BY quantidade_total DESC
+
 -- Pergunta 3: Quantos fornecedores foram registrados no mês de Setembro de 2023?
+SELECT 
+	COUNT(EXTRACT(MONTH FROM data_registro)) as total_registro_mes_9
+	FROM cap05.fornecedores
+	WHERE EXTRACT(MONTH FROM data_registro) = 9
+
+SELECT SUM(total_registros) as total_mes_9
+FROM(
+		SELECT
+			EXTRACT(MONTH FROM data_registro) as mes,
+			COUNT(nome) as total_registros
+			FROM cap05.fornecedores
+		WHERE EXTRACT(MONTH FROM data_registro) = 09
+		GROUP BY data_registro
+) AS SUBQUERY
+
 -- Pergunta 4: Qual é a média de registros de fornecedores por mês?
+SELECT
+	ROUND(SUM(contagem)/COUNT(contagem),2) as media_por_mes
+	FROM(
+		SELECT
+			EXTRACT(MONTH FROM data_registro),
+			COUNT(nome) as contagem
+		FROM cap05.fornecedores
+		GROUP BY EXTRACT(MONTH FROM data_registro)
+	) as SUBQUERY
+
+SELECT
+	ROUND(AVG(contagem),2) as media
+	FROM(
+		SELECT
+			EXTRACT(MONTH FROM data_registro),
+			COUNT(nome) as contagem
+		FROM cap05.fornecedores
+		GROUP BY EXTRACT(MONTH FROM data_registro)
+	) as SUBQUERY
+	
 -- Pergunta 5: Qual é o fornecedor mais recente registrado?
+SELECT nome, data_registro 
+FROM cap05.fornecedores
+ORDER BY data_registro DESC LIMIT 1;
 
-
-
-
-
-
-
-
+SELECT nome, data_registro
+FROM cap05.fornecedores
+WHERE data_registro = (SELECT MAX(data_Registro) FROM cap05.fornecedores)
 
 -- Pergunta 1: Qual é a quantidade de fornecedores por estado?
 SELECT
@@ -82,8 +129,6 @@ SELECT
 			GROUP BY DISTINCT EXTRACT(MONTH FROM data_registro)
 		) AS subquerie;
 
-
-
 -- Pergunta 5: Qual é o fornecedor mais recente registrado?
 
 SELECT
@@ -94,7 +139,6 @@ SELECT
 FROM cap05.fornecedores
 ORDER BY data_registro DESC
 LIMIT 1;
-
 
 SELECT
     nome,
@@ -116,5 +160,3 @@ WHERE diferença = (
         FROM cap05.fornecedores
     ) AS subconsulta2
 );
-
-
