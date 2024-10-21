@@ -31,25 +31,43 @@ INSERT INTO cap05.vendas (data_venda, valor, id_produto) VALUES
 ('2023-06-06', 64.00, 3),
 ('2023-06-20', 18.75, 20);
 
-
+--21/10/24
 # Use SQL para responder às perguntas abaixo:
 -- Pergunta 1: Qual é o total de vendas por produto?
+SELECT 
+	id_produto, SUM(valor) as total
+FROM cap05.vendas
+GROUP BY id_produto
+ORDER BY id_produto
+
 -- Pergunta 2: Quantos produtos diferentes foram vendidos?
+SELECT
+	COUNT(DISTINCT id_produto) as total_produtos
+FROM cap05.vendas;
+
 -- Pergunta 3: Qual é o total de vendas por dia?
--- Pergunta 4: Em quais dias o valor total de vendas foi superior a $100?
+SELECT 
+	SUM(valor) as valor_total,
+	data_venda
+FROM cap05.vendas
+GROUP BY data_venda
+ORDER BY data_venda
+
+-- Pergunta 4: Em quais dias o valor total de vendas foi superior a $50?
+SELECT 
+	SUM(valor) as valor_total,
+	data_venda
+FROM cap05.vendas
+GROUP BY data_venda
+HAVING SUM(valor) > 50
+
 -- Pergunta 5: Quais produtos tiveram um valor total de vendas superior a $50?
-
-
-
-
-
-
-
-
-
-
-
-
+SELECT 
+	id_produto as numero_produto,
+	SUM(valor) as valor_total
+FROM cap05.vendas
+GROUP BY id_produto
+HAVING SUM(valor) > 50
 
 -- Pergunta 1: Qual é o total de vendas por produto?
 SELECT
@@ -86,8 +104,6 @@ FROM cap05.vendas
 GROUP BY dia
 HAVING SUM(valor) > 100;
 
-
-
 -- Pergunta 5: Quais produtos tiveram um valor total de vendas superior a $50?
 SELECT
 	id_produto,
@@ -95,14 +111,3 @@ SELECT
 FROM cap05.vendas
 GROUP BY id_produto
 HAVING SUM(valor) >50;
-
-
-
-
-
-
-
-
-
-
-
