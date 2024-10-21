@@ -1,3 +1,5 @@
+--Categorização, Codificação e Binarização de variaveis
+
 # SQL Para Análise de Dados e Data Science - Capítulo 06
 
 
@@ -43,6 +45,69 @@ INSERT INTO cap06.dsa_pacientes (classe, idade, menopausa, tamanho_tumor, inv_no
 ('sem-recorrencia-eventos', '50-59', 'pré-menopausa', '30-34', '0-2', 'não', 3, 'esquerdo', 'esquerdo_inferior', 'não'),
 ('sem-recorrencia-eventos', '60-69', 'acima_de_40', '30-34', '0-2', 'não', 3, 'esquerdo', 'esquerdo_inferior', 'não');
 
+#Classe:
+classe[VARCHAR(255)]: Esta coluna representa a classe ou categoria à qual o 
+paciente pertence. O tipo de dados VARCHAR permite armazenar texto com até 255 caracteres. 
+Pode conter valores de 2 categorias.Esta variável deve ser representada numericamente
+
+SELECT DISTINCT(classe) FROM cap06.dsa_pacientes;
+
+#Idade:
+idade[VARCHAR(255)]: Esta coluna representa a faixa etária do pacienteeé armazenada como texto com até 255 caracteres. 
+Os valores podem ser faixas de idades, como "30-39" ou "40-49".
+Esta variável não deve fazer parte do resultadodoprocessamento dos dados
+
+SELECT * FROM cap06.dsa_pacientes LIMIT10;
+
+#Menopausa:
+menopausa[VARCHAR(255)]:  Esta  coluna representao  estado  da  menopausa  do paciente. 
+Esta variável  deve  ser  representada  numericamenteatravés  de  3 novas  variáveis dummy
+
+SELECT DISTINCT(menopausa) FROM cap06.dsa_pacientes;
+
+#Tamanho_turmo:
+tamanho_tumor [VARCHAR(255)]: Esta coluna contém informações sobre o tamanho do tumor do paciente. 
+Os valores podem ser faixas de tamanho do tumor, como "30-34" ou "20-24".Esta variável deve ser representada numericamente
+SELECT DISTINCT(tamanho_tumor) FROM cap06.dsa_pacientes;
+
+ORDER BY tamanho_tumor
+
+#Inv_nodes:
+inv_nodes[VARCHAR(255)]: Esta coluna representainformações sobre os nós invadidos pelo  tumor.  
+Os  valores  podem  ser  faixas  ou  categorias,  como  "0-2"  ou  outras  informações relacionadas à invasão de nós.
+Esta variável não deve fazer parte do resultadodoprocessamento dos dados.
+
+SELECT DISTINCT(Inv_nodes) FROM cap06.dsa_pacientes;
+
+#node_Caps:
+node_caps[VARCHAR(255)]: Esta coluna indicase o paciente possui ou não cápsula nos nódulos. 
+Os valores possíveis podem ser "não"ou "sim".Esta variável deve ser representada numericamente.
+
+SELECT DISTINCT(node_Caps) FROM cap06.dsa_pacientes;
+
+#deg_malig:
+deg_malig[INT]: Esta coluna contém um valor numérico inteiro que descreve o grau de malignidade do tumor. 
+É um valor numérico inteiro, o que significa que pode ser 1, 2 ou 3, por exemplo.Esta variávelnão precisa de processamento.
+
+SELECT DISTINCT(deg_malig) FROM cap06.dsa_pacientes;
+
+#seio:
+seio[VARCHAR(255)]:  Esta  coluna representao  seio  afetado  pelo  tumor.  
+Os  valores podem incluir "esquerdo" ou "direito". Esta variável deve ser representada numericamente.
+
+SELECT DISTINCT(seio) FROM cap06.dsa_pacientes;
+
+#quadrante:
+quadrante[VARCHAR(255)]: Esta coluna contéminformações sobre o quadrante do seio afetado pelo tumor. 
+Esta variável deve ser representada numericamente.
+
+SELECT DISTINCT(quadrante) FROM cap06.dsa_pacientes;
+
+#irradiando:
+irradiando[VARCHAR(255)]:  Esta  coluna indicase  o  paciente  está  ou  não  recebendo tratamento de radioterapia. 
+Os valores podem incluir "não" ou "sim”. Esta variável deve ser representada numericamente.
+
+SELECT DISTINCT(irradiando) FROM cap06.dsa_pacientes;
 
 -- Número de linhas
 SELECT COUNT(*) FROM cap06.dsa_pacientes;
