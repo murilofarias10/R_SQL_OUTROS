@@ -2,10 +2,8 @@
 
 # SQL Para Análise de Dados e Data Science - Capítulo 06
 
-
 -- Cria o schema no banco de dados
 CREATE SCHEMA cap06 AUTHORIZATION dsa;
-
 
 -- Cria a tabela
 CREATE TABLE cap06.dsa_pacientes (
@@ -45,12 +43,22 @@ INSERT INTO cap06.dsa_pacientes (classe, idade, menopausa, tamanho_tumor, inv_no
 ('sem-recorrencia-eventos', '50-59', 'pré-menopausa', '30-34', '0-2', 'não', 3, 'esquerdo', 'esquerdo_inferior', 'não'),
 ('sem-recorrencia-eventos', '60-69', 'acima_de_40', '30-34', '0-2', 'não', 3, 'esquerdo', 'esquerdo_inferior', 'não');
 
+SELECT * FROM cap06.dsa_pacientes LIMIT 10;
+
 #Classe:
 classe[VARCHAR(255)]: Esta coluna representa a classe ou categoria à qual o 
 paciente pertence. O tipo de dados VARCHAR permite armazenar texto com até 255 caracteres. 
 Pode conter valores de 2 categorias.Esta variável deve ser representada numericamente
 
 SELECT DISTINCT(classe) FROM cap06.dsa_pacientes;
+
+--modificação do dado, sem perder a informação original
+SELECT  classe,
+	CASE
+	WHEN classe = 'com-recorrencia-eventos' THEN 1
+	WHEN classe = 'sem-recorrencia-eventos' THEN 0
+	END as classe
+FROM cap06.dsa_pacientes;
 
 #Idade:
 idade[VARCHAR(255)]: Esta coluna representa a faixa etária do pacienteeé armazenada como texto com até 255 caracteres. 
@@ -85,9 +93,17 @@ Os valores possíveis podem ser "não"ou "sim".Esta variável deve ser represent
 
 SELECT DISTINCT(node_Caps) FROM cap06.dsa_pacientes;
 
+SELECT node_Caps, CASE
+	WHEN node_Caps = 'sim' THEN 1
+	WHEN node_Caps = 'não' THEN 0
+	END AS node_Caps
+FROM cap06.dsa_pacientes LIMIT 10;
+
 #deg_malig:
-deg_malig[INT]: Esta coluna contém um valor numérico inteiro que descreve o grau de malignidade do tumor. 
-É um valor numérico inteiro, o que significa que pode ser 1, 2 ou 3, por exemplo.Esta variávelnão precisa de processamento.
+deg_malig[INT]: Esta coluna contém um valor numérico inteiro que descreve 
+o grau de malignidade do tumor. 
+É um valor numérico inteiro, o que significa que pode ser 1, 2 ou 3, 
+por exemplo.Esta variável não precisa de processamento.
 
 SELECT DISTINCT(deg_malig) FROM cap06.dsa_pacientes;
 
@@ -104,10 +120,17 @@ Esta variável deve ser representada numericamente.
 SELECT DISTINCT(quadrante) FROM cap06.dsa_pacientes;
 
 #irradiando:
-irradiando[VARCHAR(255)]:  Esta  coluna indicase  o  paciente  está  ou  não  recebendo tratamento de radioterapia. 
+irradiando[VARCHAR(255)]:  Esta  coluna indicase  o  paciente  
+está  ou  não  recebendo tratamento de radioterapia. 
 Os valores podem incluir "não" ou "sim”. Esta variável deve ser representada numericamente.
 
 SELECT DISTINCT(irradiando) FROM cap06.dsa_pacientes;
+
+SELECT irradiando, CASE
+	WHEN irradiando = 'sim' THEN 1
+	WHEN irradiando = 'não' THEN 0
+	END AS irradiando
+FROM cap06.dsa_pacientes LIMIT 10;
 
 -- Número de linhas
 SELECT COUNT(*) FROM cap06.dsa_pacientes;
