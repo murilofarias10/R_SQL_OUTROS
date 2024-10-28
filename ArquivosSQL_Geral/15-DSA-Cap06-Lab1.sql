@@ -19,7 +19,6 @@ CREATE TABLE cap06.dsa_pacientes (
     irradiando VARCHAR(255)
 );
 
-
 -- Inserindo registros na tabela 
 INSERT INTO cap06.dsa_pacientes (classe, idade, menopausa, tamanho_tumor, inv_nodes, node_caps, deg_malig, seio, quadrante, irradiando) VALUES
 ('sem-recorrencia-eventos', '30-39', 'pré-menopausa', '30-34', '2-4', 'não', 3, 'esquerdo', 'esquerdo_inferior', 'não'),
@@ -76,9 +75,26 @@ SELECT DISTINCT(menopausa) FROM cap06.dsa_pacientes;
 #Tamanho_turmo:
 tamanho_tumor [VARCHAR(255)]: Esta coluna contém informações sobre o tamanho do tumor do paciente. 
 Os valores podem ser faixas de tamanho do tumor, como "30-34" ou "20-24".Esta variável deve ser representada numericamente
-SELECT DISTINCT(tamanho_tumor) FROM cap06.dsa_pacientes;
+SELECT DISTINCT(tamanho_tumor) FROM cap06.dsa_pacientes
+ORDER BY tamanho_tumor;
 
-ORDER BY tamanho_tumor
+--Categorização
+SELECT tamanho_tumor, 
+	 CASE
+			WHEN tamanho_tumor = '0-4' OR tamanho_tumor = '10-14' THEN 'Muito Pequeno'
+			WHEN tamanho_tumor = '15-19' OR tamanho_tumor = '20-24'THEN 'Pequeno'
+			WHEN tamanho_tumor = '25-29' OR tamanho_tumor = '30-34' THEN 'Medio'
+			ELSE 'Grande' END AS cat_tam_tumor
+FROM cap06.dsa_pacientes;
+
+--Label Encoding (conversão para represemtação numerica)
+SELECT tamanho_tumor, 
+	 CASE
+			WHEN tamanho_tumor = '0-4' OR tamanho_tumor = '10-14' THEN 1
+			WHEN tamanho_tumor = '15-19' OR tamanho_tumor = '20-24'THEN 2
+			WHEN tamanho_tumor = '25-29' OR tamanho_tumor = '30-34' THEN 3
+			ELSE 4 END AS cat_tam_tumor
+FROM cap06.dsa_pacientes;
 
 #Inv_nodes:
 inv_nodes[VARCHAR(255)]: Esta coluna representainformações sobre os nós invadidos pelo  tumor.  
@@ -112,12 +128,27 @@ seio[VARCHAR(255)]:  Esta  coluna representao  seio  afetado  pelo  tumor.
 Os  valores podem incluir "esquerdo" ou "direito". Esta variável deve ser representada numericamente.
 
 SELECT DISTINCT(seio) FROM cap06.dsa_pacientes;
+SELECT seio,
+	CASE
+		WHEN seio = 'esquerdo' THEN 1
+		WHEN seio = 'direito' THEN 2
+	END as cat_seio
+FROM cap06.dsa_pacientes LIMIT 10;
 
 #quadrante:
 quadrante[VARCHAR(255)]: Esta coluna contéminformações sobre o quadrante do seio afetado pelo tumor. 
 Esta variável deve ser representada numericamente.
 
 SELECT DISTINCT(quadrante) FROM cap06.dsa_pacientes;
+SELECT quadrante, CASE
+	WHEN quadrante = 'esquerdo_inferior' THEN 1
+	WHEN quadrante = 'direito_superior' THEN 2
+	WHEN quadrante = 'esquerdo_superior' THEN 3
+	WHEN quadrante = 'direito_inferior' THEN 4
+	WHEN quadrante = 'central' THEN 5
+	ELSE 6
+	END as cat_quadrante
+FROM cap06.dsa_pacientes;
 
 #irradiando:
 irradiando[VARCHAR(255)]:  Esta  coluna indicase  o  paciente  
@@ -135,14 +166,11 @@ FROM cap06.dsa_pacientes LIMIT 10;
 -- Número de linhas
 SELECT COUNT(*) FROM cap06.dsa_pacientes;
 
-
 -- Visualiza os dados
 SELECT * FROM cap06.dsa_pacientes;
 
-
 -- Valores distintos
 SELECT DISTINCT classe FROM cap06.dsa_pacientes;
-
 
 -- Binarização da variável classe (0/1)
 SELECT 
@@ -152,10 +180,8 @@ SELECT
   END AS classe
 FROM cap06.dsa_pacientes;
 
-
 -- Valores distintos
 SELECT DISTINCT irradiando FROM cap06.dsa_pacientes;
-
 
 -- Binarização da variável irradiando (0/1)
 SELECT 
@@ -164,7 +190,6 @@ SELECT
     WHEN irradiando = 'sim' THEN 1
   END AS irradiando
 FROM cap06.dsa_pacientes;
-
 
 -- Binarização da variável node_caps (0/1)
 SELECT DISTINCT node_caps FROM cap06.dsa_pacientes;
@@ -176,10 +201,8 @@ SELECT
   END AS node_caps
 FROM cap06.dsa_pacientes;
 
-
 -- Valores distintos
 SELECT DISTINCT seio FROM cap06.dsa_pacientes;
-
 
 -- Categorização da variável seio (E/D)
 SELECT 
@@ -189,7 +212,6 @@ SELECT
   END AS seio
 FROM cap06.dsa_pacientes;
 
-
 -- Label Encoding da variável seio (1/2)
 SELECT 
   CASE 
@@ -198,11 +220,9 @@ SELECT
   END AS seio
 FROM cap06.dsa_pacientes;
 
-
 -- Valores distintos
 SELECT DISTINCT tamanho_tumor FROM cap06.dsa_pacientes;
 SELECT DISTINCT tamanho_tumor FROM cap06.dsa_pacientes ORDER BY tamanho_tumor;
-
 
 -- Categorização da variável tamanho_tumor (6 Categorias)
 SELECT 
@@ -216,7 +236,6 @@ SELECT
   END AS tamanho_tumor
 FROM cap06.dsa_pacientes;
 
-
 -- Label Encoding da variável tamanho_tumor (6 Categorias)
 SELECT 
   CASE 
@@ -229,10 +248,8 @@ SELECT
   END AS tamanho_tumor
 FROM cap06.dsa_pacientes;
 
-
 -- Valores distintos
 SELECT DISTINCT quadrante FROM cap06.dsa_pacientes;
-
 
 -- Label Encoding da variável quadrante (1,2,3,4,5)
 SELECT 
@@ -246,10 +263,8 @@ SELECT
   END AS quadrante
 FROM cap06.dsa_pacientes;
 
-
 -- Valores distintos
 SELECT DISTINCT menopausa FROM cap06.dsa_pacientes;
-
 
 -- One-Hot Encoding (criação de variáveis dummy)
 SELECT 
@@ -267,7 +282,6 @@ SELECT
         ELSE 0 
     END AS abaixo_de_40
 FROM cap06.dsa_pacientes;
-
 
 -- Query com todas as transformações
 SELECT 
@@ -318,7 +332,6 @@ SELECT
     ELSE 0 
   END AS abaixo_de_40
 FROM cap06.dsa_pacientes;
-
 
 -- Cria uma nova tabela
 CREATE TABLE cap06.dsa_pacientes_resultado
@@ -372,17 +385,9 @@ SELECT
   END AS abaixo_de_40
 FROM cap06.dsa_pacientes;
 
-
 -- Consulta a tabela
 SELECT * FROM cap06.dsa_pacientes_resultado;
 
-
-
-
-
-
-
-
-
-
-
+--Categorização: criar novas categorias
+-- Label Encoding somente numeros
+--Binarização somente 0 e 1
