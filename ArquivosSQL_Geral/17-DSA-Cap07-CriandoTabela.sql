@@ -102,10 +102,14 @@ INSERT INTO cap07.pedidos_sem_ir (id_produto, id_cliente, quantidade, data_pedid
 (9, 7, 59, '2023-10-10');
 
 
-SELECT * FROM cap07.clientes
-SELECT * FROM cap07.produtos
-SELECT * FROM cap07.pedidos
-SELECT * FROM cap07.pedidos_sem_ir
+SELECT * FROM cap07.clientes LIMIT 10;
+SELECT * FROM cap07.produtos LIMIT 10;
+SELECT * FROM cap07.pedidos LIMIT 10;
+SELECT * FROM cap07.pedidos_sem_ir LIMIT 10;
+
+SELECT c.nome, c.id_cliente, p.quantidade, p.id_cliente
+FROM cap07.clientes c
+INNER JOIN cap07.pedidos p ON c.id_cliente = p.id_cliente;
 
 SELECT
 	cap07.clientes.id_cliente, 
