@@ -15,7 +15,6 @@ CREATE TABLE cap07.clientes (
     tipo VARCHAR(20) CHECK (tipo IN ('pessoa física', 'pessoa jurídica')) NOT NULL 
 );
 
-
 -- Criação da tabela Produtos
 CREATE TABLE cap07.produtos (
     id_produto SERIAL PRIMARY KEY,
@@ -35,7 +34,6 @@ CREATE TABLE cap07.pedidos (
     FOREIGN KEY (id_produto) REFERENCES cap07.produtos(id_produto)
 );
 
-
 -- Criação da tabela Pedidos sem Integridade Referencial
 CREATE TABLE cap07.pedidos_sem_ir (
     id_pedido SERIAL PRIMARY KEY,
@@ -44,7 +42,6 @@ CREATE TABLE cap07.pedidos_sem_ir (
     quantidade INT NOT NULL CHECK (quantidade > 0),
     data_pedido DATE NOT NULL
 );
-
 
 -- Inserindo registros na tabela de clientes
 INSERT INTO cap07.clientes (nome, sobrenome, estado, tipo) VALUES
@@ -58,7 +55,6 @@ INSERT INTO cap07.clientes (nome, sobrenome, estado, tipo) VALUES
 ('Roberto', 'Almeida', 'MT', 'pessoa física'),
 ('Empresa C', 'Inc.', 'SP', 'pessoa jurídica'),
 ('Felipe', 'Costa', 'BA', 'pessoa física');
-
 
 -- Inserindo registros na tabela de produtos
 INSERT INTO cap07.produtos (nome, categoria, preco) VALUES
@@ -87,7 +83,6 @@ INSERT INTO cap07.pedidos (id_produto, id_cliente, quantidade, data_pedido) VALU
 (1, 9, 35, '2023-10-09'),
 (9, 7, 59, '2023-10-10');
 
-
 -- Inserindo registros na tabela de pedidos sem integridade referencial
 INSERT INTO cap07.pedidos_sem_ir (id_produto, id_cliente, quantidade, data_pedido) VALUES
 (1, 1, 20, '2023-10-01'),
@@ -100,7 +95,6 @@ INSERT INTO cap07.pedidos_sem_ir (id_produto, id_cliente, quantidade, data_pedid
 (8, 7, 42, '2023-10-08'),
 (123, 9, 35, '2023-10-09'),
 (9, 7, 59, '2023-10-10');
-
 
 SELECT * FROM cap07.clientes LIMIT 10;
 SELECT * FROM cap07.produtos LIMIT 10;
@@ -132,6 +126,19 @@ SELECT
 FROM cap07.clientes c, cap07.pedidos p
 WHERE c.id_cliente = p.id_cliente
 
+--Retorne id, nome e estado do cliente, id e quantidade do pedido de todos os clientes 
+-- que fizeram pedido, ordene pelo id do cliente
+
+SELECT * FROM cap07.clientes WHERE id_cliente = 1
+SELECT * FROM cap07.pedidos WHERE id_cliente = 1
+
+SELECT 
+	c.id_cliente, c.nome, c.estado, p.id_pedido, p.quantidade
+FROM cap07.clientes c
+INNER JOIN  cap07.pedidos p 
+ON c.id_cliente = p.id_cliente
+ORDER BY c.id_cliente
+
 -- Continuando agora utilizando o DBeaver 24.1.1
 --Retorn id, nome e estado do cliente, id e quantidade do pedido de todos os clientes que fizeram pedido
 --Ordene pelo id do cliente
@@ -151,6 +158,53 @@ from cap07.clientes c
 inner join cap07.pedidos p 
 on c.id_cliente  = p.id_cliente 
 order by c.id_cliente 
+
+--Retorne id, nome e estado do cliente, id e quantidade do pedido de todos os clientes,
+--independende de ter feito ou nao pedido
+--ordene pelo id do cliente
+SELECT 
+	c.id_cliente, c.nome, c.estado,	p.id_pedido, p.quantidade 
+FROM cap07.clientes c 
+LEFT JOIN  cap07.pedidos p 
+ON c.id_cliente = p.id_cliente
+ORDER BY c.id_cliente
+
+SELECT 
+    id_cliente,
+    nome, 
+    estado, 
+    CASE WHEN id_pedido IS NULL THEN 'sem pedido' ELSE CAST(id_pedido AS VARCHAR) END AS pedido,
+    CASE WHEN quantidade IS NULL THEN 'sem pedido' ELSE CAST(quantidade AS VARCHAR) END AS quantidade
+FROM (
+    SELECT c.id_cliente, c.nome, c.estado, p.id_pedido, p.quantidade
+    FROM cap07.clientes c 
+    LEFT JOIN cap07.pedidos p 
+    ON c.id_cliente = p.id_cliente
+) AS SUBQUERY
+ORDER BY id_cliente;
+
+SELECT * FROM cap07.clientes
+SELECT * FROM cap07.pedidos
+
+SELECT 
+    id_cliente,
+    nome, 
+    estado, 
+    CASE WHEN id_pedido IS NULL THEN 'sem pedido' ELSE CAST(id_pedido AS VARCHAR) END AS pedido,
+    CASE WHEN quantidade IS NULL THEN 'sem pedido' ELSE CAST(quantidade AS VARCHAR) END AS quantidade
+FROM (
+    SELECT c.id_cliente, c.nome, c.estado, p.id_pedido, p.quantidade
+    FROM cap07.pedidos p 
+    LEFT JOIN cap07.clientes c 
+    ON p.id_cliente = c.id_cliente 
+	ORDER BY c.id_cliente
+) AS SUBQUERY
+ORDER BY id_cliente;
+
+
+
+
+
 
 --Qual o total de cliente com pedidos ? Resposta 6
 SELECT count(distinct(id_cliente)) as TOTAL_COM_PEDIDOS from (
