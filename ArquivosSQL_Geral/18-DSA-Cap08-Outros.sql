@@ -54,15 +54,19 @@ LEFT JOIN cap08.pedidos pedido ON produto.id_produto = pedido.id_produto
 WHERE pedido.id_pedido IS NOT NULL
 ORDER BY produto.nome;
 
-
-
-
 -- Observe o que acontece sem integridade referencial:
 
 -- Retorne todos os pedidos com ou sem produto associado
 -- Retorne id do produto, nome do produto, preço do produto, id do cliente associado ao pedido, quantidade e id do pedido
 -- Ordene por nome do produto
 
+SELECT * FROM cap08.pedidos LIMIT 10;
+SELECT * FROM cap08.produtos LIMIT 10;
+
+SELECT pr.id_produto, pr.nome, pr.preco, pe.id_cliente, pe.quantidade, pe.id_pedido
+FROM cap08.pedidos pe
+LEFT JOIN cap08.produtos pr ON pe.id_produto = pr.id_produto
+ORDER BY pr.nome
 
 -- Resposta com tabelas onde a IR foi implementada
 SELECT pr.id_produto, pr.nome, pr.preco, p.id_cliente, p.quantidade, p.id_pedido
@@ -70,13 +74,11 @@ FROM cap08.produtos pr
 RIGHT JOIN cap08.pedidos p ON pr.id_produto = p.id_produto
 ORDER BY pr.nome;
 
-
 -- Resposta com tabelas onde a IR NÃO foi implementada
 SELECT pr.id_produto, pr.nome, pr.preco, p.id_cliente, p.quantidade, p.id_pedido
 FROM cap08.produtos pr
 RIGHT JOIN cap08.pedidos_sem_ir p ON pr.id_produto = p.id_produto
 ORDER BY pr.nome;
-
 
 -- FULL JOIN
 -- Retorna todos os registros havendo ou não correspondência entre as tabelas
@@ -89,13 +91,13 @@ SELECT *
 FROM cap08.produtos pr
 FULL OUTER JOIN cap08.pedidos p ON pr.id_produto = p.id_produto;
 
-
 -- CROSS JOIN
 -- Produto cartesiano, ou seja, retorna todas as combinações possíveis entre as tabelas
+-- a primeira linha de uma tabela com todas da segunda tabela e assim por diante
 SELECT * 
 FROM cap08.produtos pr
-CROSS JOIN cap08.pedidos p;
-
+CROSS JOIN cap08.pedidos p
+ORDER BY pr.id_produto
 
 -- SELF JOIN
 -- Queremos listar os pares de pedidos feitos pelo mesmo cliente.
@@ -119,14 +121,4 @@ SELECT p1.id_pedido AS Pedido1_ID, p2.id_pedido AS Pedido2_ID, p1.id_cliente
 FROM cap08.pedidos p1
 JOIN cap08.pedidos p2 
 ON p1.id_cliente = p2.id_cliente AND p1.id_pedido < p2.id_pedido;
-
-
-
-
-
-
-
-
-
-
 
