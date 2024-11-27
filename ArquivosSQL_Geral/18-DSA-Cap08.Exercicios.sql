@@ -44,37 +44,56 @@ INSERT INTO cap08.livros_vendidos (id_livro, id_autor) VALUES
 
 -- Responda as perguntas abaixo:
 -- Exercício 1: Liste todos os livros vendidos e seus respectivos autores.
-
-SELECT vend.id_livro, aut.nome as autor, liv.titulo as livro_vendido
+SELECT vend.id_livro, aut.nome as autor, liv.titulo as titulo
 FROM cap08.livros_vendidos vend
-LEFT JOIN cap08.livros liv USING (id_livro)
-LEFT JOIN cap08.autores aut USING (id_autor)
+INNER JOIN cap08.livros liv USING (id_livro)
+INNER JOIN cap08.autores aut USING (id_autor)
 
 -- Exercício 2: Liste todos os autores e seus respectivos livros, incluindo autores que não têm livros cadastrados.
-
 SELECT 
+	aut.id_autor as id,
 	aut.nome as autor, 
 	CASE WHEN liv.titulo IS NULL THEN 'TBD' ELSE (liv.titulo) END as titulo
 FROM cap08.autores aut
 LEFT JOIN cap08.livros_vendidos venda USING (id_autor)
 LEFT JOIN cap08.livros liv ON liv.id_livro = venda.id_livro
+ORDER BY aut.id_autor
+
+--usando o case ou o COALESCE
+SELECT aut.nome AS "nome do autor", COALESCE(liv.titulo, 'TBD') AS "nome do livro"
+FROM cap08.autores aut
+LEFT JOIN cap08.livros_vendidos lv ON aut.id_autor = lv.id_autor
+LEFT JOIN cap08.livros liv ON liv.id_livro = lv.id_livro
 
 -- Exercício 3: Liste todos os livros e seus respectivos autores, incluindo livros que não têm autores cadastrados.
 SELECT 
+	liv.id_livro,
 	liv.titulo as livros,
 	CASE WHEN aut.nome IS NULL THEN 'TBD' ELSE (aut.nome) END as autores
 FROM cap08.livros liv
 LEFT JOIN cap08.livros_vendidos venda USING(id_livro)
 LEFT JOIN cap08.autores aut ON aut.id_autor = venda.id_autor
 
--- Exercício 4: Liste os autores que nasceram antes de 1970 e os livros que eles escreveram.
+--usando o case ou o COALESCE
+SELECT liv.titulo as "Nome do Livro", COALESCE (aut.nome, 'TBD') AS "Nome do Autor"
+FROM cap08.autores aut
+RIGHT JOIN cap08.livros_vendidos lv ON aut.id_autor = lv.id_autor
+RIGHT JOIN cap08.livros liv ON liv.id_livro = lv.id_livro
+
+-- Exercício 4: Liste os autores que nasceram antes de 1970 e os livros que eles escreveram (e que foram vendidos)
 SELECT 
-	aut.nome as autor, EXTRACT(YEAR FROM aut.data_nascimento) as ano_nascimento, 
+	aut.id_autor, aut.nome as autor, EXTRACT(YEAR FROM aut.data_nascimento) as ano_nascimento, 
 	CASE WHEN lv.titulo IS NULL THEN 'TBD' ELSE (lv.titulo) END as titulo_livro
 FROM cap08.autores aut
-LEFT JOIN cap08.livros_vendidos venda USING (id_autor)
-LEFT JOIN cap08.livros lv ON venda.id_livro = lv.id_livro
-WHERE EXTRACT(YEAR FROM aut.data_nascimento) < 1970
+INNER JOIN cap08.livros_vendidos venda USING (id_autor)
+INNER JOIN cap08.livros lv ON venda.id_livro = lv.id_livro
+WHERE EXTRACT(YEAR FROM aut.data_nascimento) < '1970'
+
+SELECT a.nome AS "Nome do Autor", l.titulo As "Nome do livro", a.data_nascimento
+FROM cap08.autores a
+INNER JOIN cap08.livros_vendidos la USING(id_autor)
+INNER JOIN cap08.livros l USING (id_livro)
+WHERE a.data_nascimento < '1970-01-01'
 
 -- Exercício 5: Liste os livros publicados após 2017, incluindo os que não têm autores associados.
 SELECT 
@@ -83,7 +102,12 @@ SELECT
 FROM cap08.livros lv
 LEFT JOIN cap08.livros_vendidos venda USING(id_livro)
 LEFT JOIN cap08.autores aut ON aut.id_autor = venda.id_autor
-WHERE lv.ano_publicacao >=2017
+WHERE lv.ano_publicacao >2017
 ORDER BY lv.ano_publicacao DESC
 
-
+-- Usando COALESCE
+SELECT lv.titulo AS "Nome do livro", COALESCE (aut.nome, 'TBD') AS "Nome do Autor"
+FROM cap08.livros lv
+LEFT JOIN cap08.livros_vendidos AS lvend USING(id_livro)
+LEFT JOIN cap08.autores AS aut ON aut.id_autor = lvend.id_autor
+WHERE lv.ano_publicacao > 2017
