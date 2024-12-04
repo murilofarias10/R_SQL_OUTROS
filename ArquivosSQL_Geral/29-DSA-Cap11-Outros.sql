@@ -71,7 +71,6 @@ GROUP BY
 ORDER BY 
     custo_total DESC;
 
-
 -- Custo total dos pedidos por estado com produto cujo título tenha 'Análise' ou 'Apache' no nome
 SELECT * FROM cap10.dsa_pedidos -- usar id_produto
 SELECT * FROM cap10.dsa_produtos --custo e nome produto vinculando id_prod
