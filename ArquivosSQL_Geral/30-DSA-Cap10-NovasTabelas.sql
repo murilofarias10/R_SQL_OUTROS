@@ -1,6 +1,5 @@
 # SQL Para Análise de Dados e Data Science - Capítulo 10
 
-
 -- Criação da tabela Clientes
 CREATE TABLE IF NOT EXISTS cap10.dsa_vendas (
     ano INT NULL,
@@ -8,7 +7,6 @@ CREATE TABLE IF NOT EXISTS cap10.dsa_vendas (
     produto VARCHAR(50) NULL,
     faturamento INT NULL
 );
-
 
 -- Insere registros
 INSERT INTO cap10.dsa_vendas (ano, pais, produto, faturamento)
@@ -68,8 +66,6 @@ SELECT ano, SUM(faturamento) AS faturamento_total
 FROM cap10.dsa_vendas
 GROUP BY ROLLUP(ano);
 
-
-
 -- Faturamento total por ano e total geral, ordenado por ano
 SELECT 
     COALESCE(TO_CHAR(ano, '9999'), 'Total') AS ano,
@@ -77,7 +73,6 @@ SELECT
 FROM cap10.dsa_vendas
 GROUP BY ROLLUP(ano)
 ORDER BY  ano;
-
 
 -- Faturamento total por ano e pais e total geral (ROLLUP)
 SELECT 
@@ -87,12 +82,6 @@ SELECT
 FROM cap10.dsa_vendas
 GROUP BY ROLLUP(pais, ano)
 ORDER BY pais, ano, sum
-
-
-
-
-
-
 
 SELECT 
     COALESCE(TO_CHAR(ano, '9999'), 'Total') AS ano,
@@ -105,9 +94,9 @@ GROUP BY
 ORDER BY
   ano, pais;
 
-
 -- Faturamento total por ano e pais e 
 -- total geral do ano e do pais (CUBE)
+
 SELECT 
     COALESCE(TO_CHAR(ano, '9999'), 'Total') AS ano,
     COALESCE(pais, 'Total') AS pais,
@@ -118,7 +107,6 @@ GROUP BY
     CUBE(ano, pais)
 ORDER BY 
     ano, pais;
-
 
 -- Faturamento total por ano e produto e total geral
 SELECT 
@@ -136,26 +124,24 @@ FROM
 GROUP BY 
     ROLLUP(ano, produto);
 
-
+--Murilo
 -- Faturamento total por ano e produto e total geral, 
 -- ordenado por produto, ano e faturamento_total
-SELECT 
-    CASE 
-        WHEN ano IS NULL THEN 'Total Geral' 
-        ELSE CAST(ano AS VARCHAR)
-    END AS ano, 
-    CASE 
-        WHEN produto IS NULL THEN 'Todos os Produtos' 
-        ELSE produto
-    END AS produto, 
-    SUM(faturamento) AS faturamento_total
-FROM 
-    cap10.dsa_vendas
-GROUP BY 
-    ROLLUP(ano, produto)
-ORDER BY 
-    produto, ano, faturamento_total;
-
+SELECT ano, produto, faturamento FROM (
+SELECT
+	CASE 
+		WHEN produto = 'Geladeira' THEN 1 
+		WHEN produto = 'Notebook' THEN 2
+		WHEN produto = 'Smartphone' THEN 3
+		WHEN produto = 'TV' THEN 4
+		ELSE 5 END AS GRUPO,
+	COALESCE(TO_CHAR(ano, '9999'), 'Total') AS ano, 
+	CASE WHEN produto IS NULL THEN 'Todos os Produtos' ELSE produto END AS produto, 
+	sum(faturamento) as faturamento
+FROM cap10.dsa_vendas
+GROUP BY CUBE(ano, produto)
+ORDER BY GRUPO, ano
+) AS SUBQUERIE
 
 -- Faturamento total por ano e produto e total geral, 
 -- ordenado pelo agrupamento de produto
@@ -163,72 +149,45 @@ ORDER BY
 -- está sendo agrupada ou se está em uma linha de subtotal ou total
 -- Podemos usar a função GROUPING para fazer a ordenação do resultado
 SELECT 
-    CASE 
-        WHEN ano IS NULL THEN 'Total Geral' 
-        ELSE CAST(ano AS VARCHAR)
-    END AS ano, 
-    CASE 
-        WHEN produto IS NULL THEN 'Todos os Produtos' 
-        ELSE produto
-    END AS produto, 
+    CASE WHEN ano IS NULL THEN 'Total Geral' ELSE CAST(ano AS VARCHAR)END AS ano, 
+    CASE WHEN produto IS NULL THEN 'Todos os Produtos' ELSE produto END AS produto, 
     SUM(faturamento) AS faturamento_total
-FROM 
-    cap10.dsa_vendas
-GROUP BY 
-    ROLLUP(ano, produto)
-ORDER BY 
-    GROUPING(produto), ano, faturamento_total;
-
+FROM cap10.dsa_vendas
+GROUP BY ROLLUP(ano, produto)
+ORDER BY GROUPING(produto), ano, faturamento_total
 
 -- A função GROUPING em SQL é usada para determinar se uma coluna ou expressão em uma consulta 
 -- está sendo agrupada ou se está em uma linha de subtotal ou total
 -- Faturamento total por ano e país e total geral com agrupamento do resultado
 SELECT
-    CASE 
-        WHEN GROUPING(ano) = 1 THEN 'Total de Todos os Anos'
-        ELSE CAST(ano AS VARCHAR)
-    END AS ano,
-    CASE 
-        WHEN GROUPING(pais) = 1 THEN 'Total de Todos os Países'
-        ELSE pais
-    END AS pais,
-    CASE 
-        WHEN GROUPING(produto) = 1 THEN 'Total de Todos os Produtos'
-        ELSE produto
-    END AS produto,
+	COALESCE(TO_CHAR(ano, '9999'), 'Total') AS ano, 
+	CASE WHEN pais IS NULL THEN 'Total' ELSE pais END AS pais, 
+	sum(faturamento) as faturamento
+FROM cap10.dsa_vendas
+GROUP BY CUBE(ano, pais)
+ORDER BY (pais, ano)
+
+SELECT
+	COALESCE(TO_CHAR(ano, '9999'), 'Total') AS ano, 
+	CASE WHEN pais IS NULL THEN 'Total' ELSE pais END AS pais, 
+	sum(faturamento) as faturamento
+FROM cap10.dsa_vendas
+GROUP BY CUBE(ano, pais)
+ORDER BY (ano, pais)
+
+SELECT
+    CASE WHEN GROUPING(ano) = 1 THEN 'Total de Todos os Anos' ELSE CAST(ano AS VARCHAR)END AS ano,
+    CASE WHEN GROUPING(pais) = 1 THEN 'Total de Todos os Países' ELSE pais END AS pais,
+    CASE WHEN GROUPING(produto) = 1 THEN 'Total de Todos os Produtos' ELSE produto END AS produto,
     SUM(faturamento) AS faturamento_total 
-FROM 
-    cap10.dsa_vendas
-GROUP BY 
-    ROLLUP(ano, pais, produto)
-ORDER BY 
-    GROUPING(produto, ano, pais), faturamento_total;
+FROM cap10.dsa_vendas
+GROUP BY ROLLUP(ano, pais, produto)
+ORDER BY GROUPING(produto, ano, pais), faturamento_total;
 
-
--- STRING_AGG
--- Faturamento total por país em 2024 mostrando todos os produtos vendidos como uma lista
+-- STRING_AGG (PgAdmin ou) GROUP_CONCAT MySQL
 SELECT 
     pais,
     STRING_AGG(produto, ', ') AS produtos_vendidos,
     SUM(faturamento) AS faturamento_total 
-FROM 
-    cap10.dsa_vendas
-WHERE ano = 2024
-GROUP BY 
-    pais;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+FROM cap10.dsa_vendas
+GROUP BY pais;
