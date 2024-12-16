@@ -1,6 +1,5 @@
 # SQL Para Análise de Dados e Data Science - Capítulo 05
 
-
 -- Criando a tabela 'fornecedores'
 CREATE TABLE cap05.fornecedores (
     id SERIAL PRIMARY KEY,
@@ -10,7 +9,6 @@ CREATE TABLE cap05.fornecedores (
     email VARCHAR(255),
     data_registro DATE
 );
-
 
 -- Inserindo registros na tabela 'funcionarios'
 INSERT INTO cap05.fornecedores (nome, cidade, estado, email, data_registro) VALUES

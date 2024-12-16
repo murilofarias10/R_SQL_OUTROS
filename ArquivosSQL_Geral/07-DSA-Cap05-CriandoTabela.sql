@@ -13,7 +13,6 @@ CREATE TABLE cap05.dsa_vendas (
     Valor_Unitario_Venda DECIMAL(10, 2) NOT NULL
 );
 
-
 -- Carrega os dados
 INSERT INTO cap05.dsa_vendas (Data_Venda, Nome_Produto, Categoria_Produto, Unidades_Vendidas, Valor_Unitario_Venda) VALUES
 ('2023-08-01', 'Produto A', 'Categoria 1', 5, 10.50),

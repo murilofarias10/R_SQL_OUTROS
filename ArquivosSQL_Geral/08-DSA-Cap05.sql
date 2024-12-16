@@ -24,7 +24,6 @@ from cap05.dsa_vendas;
 SELECT ROUND(AVG(Valor_Unitario_Venda), 2) AS Media_Valor_Unitario
 FROM cap05.dsa_vendas;
 
-
 -- Query SQL para retornar a 
 --contagem, valor mínimo, valor máximo e soma (total) de Valor_Unitario_Venda.
 SELECT * FROM cap05.dsa_vendas where 1 = 0;
@@ -84,7 +83,6 @@ SELECT
 FROM cap05.dsa_vendas
 GROUP BY Categoria_Produto;
 
-
 -- Query SQL para retornar a média (com duas casas decimais) de Valor_Unitario_Venda por categoria de produto, 
 -- ordenado pela média em ordem decrescente.
 
@@ -94,7 +92,6 @@ SELECT
 FROM cap05.dsa_vendas
 GROUP BY Categoria_Produto
 ORDER BY Media_Valor_Unitario DESC;
-
 
 -- Query SQL para retornar a soma de Valor_Unitario_Venda por produto. 
 SELECT 
@@ -111,13 +108,11 @@ from cap05.dsa_vendas
 group by nome_produto
 order by soma_total desc;
 
-
 SELECT 
     Nome_Produto,
     SUM(Valor_Unitario_Venda) AS Soma_Valor_Unitario
 FROM cap05.dsa_vendas
 GROUP BY Nome_Produto;
-
 
 -- Query SQL para retornar a soma de Valor_Unitario_Venda por produto e categoria.
 SELECT * FROM cap05.dsa_vendas where 1 = 0;
@@ -144,8 +139,7 @@ SELECT
     Categoria_Produto,
     SUM(Valor_Unitario_Venda) AS Soma_Valor_Unitario
 FROM cap05.dsa_vendas
-GROUP BY Nome_Produto;
-
+GROUP BY Nome_Produto, Categoria_Produto;
 
 -- Query SQL para retornar a soma de Valor_Unitario_Venda 
 --por produto e categoria, ordenado por produto e categoria.
@@ -158,10 +152,8 @@ FROM cap05.dsa_vendas
 GROUP BY Nome_Produto, Categoria_Produto
 ORDER BY Nome_Produto, Categoria_Produto;
 
-
 -- Query SQL para retornar a soma de Valor_Unitario_Venda por categoria e produto, 
 --ordenado por categoria e produto.
-
 
 SELECT 
     Categoria_Produto,
@@ -170,7 +162,6 @@ SELECT
 FROM cap05.dsa_vendas
 GROUP BY Categoria_Produto, Nome_Produto
 ORDER BY Categoria_Produto, Nome_Produto;
-
 
 -- Query SQL para retornar a média (com duas casas decimais) 
 --de Valor_Unitario_Venda por produto, 
@@ -264,9 +255,7 @@ HAVING AVG(valor_unitario_venda) >5;
 -- somente se a média for maior ou igual a 16 e
 --unidades vendidas maior do que 4, ordenado por nome de produto.
 
-
 select * from cap05.dsa_vendas where 1 = 0;
-
 
 SELECT
 	nome_produto,
@@ -291,7 +280,6 @@ GROUP BY Nome_Produto, Categoria_Produto, unidades_vendidas
 HAVING AVG(Valor_Unitario_Venda) >= 16
 ORDER BY Nome_Produto;
 
-
 -- Query SQL para retornar a média (com duas casas decimais) de Valor_Unitario_Venda por produto e categoria, 
 -- somente se a média for maior ou igual a 16 e o produto for B ou C, ordenado por categoria.
 
@@ -312,7 +300,6 @@ SELECT
 FROM cap05.dsa_vendas 
 GROUP BY nome_produto, categoria_produto
 ORDER BY media_venda desc;
-
 
 SELECT 
     Nome_Produto, 
@@ -438,7 +425,6 @@ SELECT
 	GROUP BY mes
 	ORDER BY mes
 	
-
 SELECT
     EXTRACT(MONTH FROM data_venda) AS mes,
     ROUND(AVG(unidades_vendidas * valor_unitario_venda), 2) AS media

@@ -1,6 +1,5 @@
 # SQL Para Análise de Dados e Data Science - Capítulo 05
 
-
 -- Criando a tabela 'vendas'
 CREATE TABLE cap05.vendas (
     id SERIAL PRIMARY KEY,
@@ -8,7 +7,6 @@ CREATE TABLE cap05.vendas (
     valor DECIMAL(10, 2),
     id_produto INT
 );
-
 
 -- Inserindo registros na tabela 'vendas'
 INSERT INTO cap05.vendas (data_venda, valor, id_produto) VALUES
@@ -82,7 +80,6 @@ SELECT
 	COUNT(id_produto) as contagem_vendas
 FROM cap05.vendas
 GROUP BY id_produto;
-
 
 SELECT
 	COUNT(DISTINCT(id_produto)) as total_diferentes_produtos

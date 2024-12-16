@@ -23,7 +23,6 @@ INSERT INTO cap08.estudantes_universidade (nome, especialidade) VALUES ('Bob', '
 INSERT INTO cap08.estudantes_universidade (nome, especialidade) VALUES ('Maria', 'Medicina');
 INSERT INTO cap08.estudantes_universidade (nome, especialidade) VALUES ('José', 'Engenharia');
 
-
 -- UNION: Este operador é usado para combinar os resultados de duas 
 --ou mais consultas SELECT em um único conjunto de resultados. 
 -- Ele elimina duplicatas por padrão.

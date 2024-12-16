@@ -106,7 +106,6 @@ WHERE departamento = 'Marketing'
 AND salario = 5500
 AND sobrenome LIKE '%ve%';
 
-
 select * from cap04.funcionarios 
 where salario > 5500
 AND (departamento = 'Marketing' or departamento = 'marketing')

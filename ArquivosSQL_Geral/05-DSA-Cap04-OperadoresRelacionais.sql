@@ -46,7 +46,6 @@ SELECT *
 FROM cap04.estudantes
 WHERE nome = 'Xavier';
 
-
 -- OPERADORES LÓGICOS
 SELECT nome, nota_exame1, nota_exame2
 FROM cap04.estudantes
@@ -85,7 +84,6 @@ WHERE (nota_exame1 > 90 OR nota_exame2 > 90)
   AND tipo_sistema_operacional != 'Linux'
   AND NOT nome IN ('Carol', 'Grace');
 
-
 -- OUTROS OPERADORES RELACIONAIS RETORNA VERDADEIRO OU FALSO
 -- OPERADOR IN
 
@@ -104,7 +102,6 @@ WHERE tipo_sistema_operacional IN ('Unix');
 SELECT nome, sobrenome, nota_exame1, tipo_sistema_operacional
 FROM cap04.estudantes
 WHERE tipo_sistema_operacional NOT IN ('Linux', 'Mac');
-
 
 -- OPERADOR LIKE
 
@@ -136,7 +133,6 @@ SELECT
 FROM cap04.estudantes
 WHERE nome NOT LIKE 'A%'
 ORDER BY nome_completo;
-
 
 SELECT nome_completo, nota_exame1, nota_exame2
 FROM (
@@ -203,9 +199,6 @@ SELECT
 FROM cap04.estudantes
 ORDER BY status;
 
-
-
-
 SELECT 
     nome || ' ' || sobrenome AS nome_completo, 
     nota_exame1, 
@@ -227,7 +220,6 @@ WHERE nota_exame1 BETWEEN 88 AND 90
     AND (nome LIKE 'C%' OR nome LIKE 'H%' OR nome LIKE 'J%')
     AND nota_exame2 != 80 
 ORDER BY nome_completo;
-
 
 -- LIMPAR A TABELA (USE COM CUIDADO)
 TRUNCATE TABLE cap04.estudantes;

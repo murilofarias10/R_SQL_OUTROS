@@ -43,7 +43,6 @@ FROM cap04.estudantes;
 SELECT tipo_sistema_operacional, nota_exame1, nota_exame2, nome || ' ' || sobrenome AS nome_completo
 FROM cap04.estudantes;
 
-
 select 
 CONCAT(nome,' ',sobrenome) as nome_completo,
 tipo_sistema_operacional, nota_exame1, nota_exame2 
@@ -137,7 +136,6 @@ FROM cap04.estudantes
 WHERE nota_exame1 < 90
 ORDER BY nome_completo, nota_exame1 DESC;
 
-
 --trabalhando com os nomes
 SELECT nome,COUNT(*) AS quantidade
 from cap04.estudantes
@@ -148,12 +146,9 @@ SELECT nome || ' ' || sobrenome AS nome_completo, COUNT(*) AS quantidade
 FROM cap04.estudantes
 GROUP BY nome || ' ' || sobrenome;
 
-
 SELECT SUM(quantidade) AS soma
 FROM (
     SELECT nome, COUNT(*) AS quantidade
     FROM cap04.estudantes
     GROUP BY nome
 ) AS subquery;
-
-

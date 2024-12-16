@@ -201,11 +201,6 @@ FROM (
 ) AS SUBQUERY
 ORDER BY id_cliente;
 
-
-
-
-
-
 --Qual o total de cliente com pedidos ? Resposta 6
 SELECT count(distinct(id_cliente)) as TOTAL_COM_PEDIDOS from (
 SELECT
@@ -262,7 +257,6 @@ LEFT join cap07.pedidos p
 ON c.id_cliente = p.id_cliente 
 ORDER BY id_table_cliente
 
-
 --selecionando somente os pedidos NULL
 select id_table_cliente, nome, id_table_pedidos, quantidade FROM(
 select  
@@ -274,4 +268,3 @@ ON c.id_cliente = p.id_cliente
 ORDER BY id_table_cliente
 ) as SUBQUERIE
 where quantidade is null
-

@@ -15,7 +15,6 @@ CREATE TABLE cap04.estudantes (
     tipo_sistema_operacional VARCHAR(20)
 );
 
-
 -- Inserindo 30 registros fictícios na tabela 'estudantes'
 INSERT INTO cap04.estudantes (nome, sobrenome, nota_exame1, nota_exame2, tipo_sistema_operacional) VALUES
 ('Xavier', 'Murphy', 86.0, 89.0, 'Linux'),

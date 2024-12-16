@@ -28,7 +28,6 @@ INSERT INTO cap05.clientes (nome, email, cidade, estado, data_nascimento) VALUES
 ('Fábio Azevedo', 'fabio.azevedo@exemplo.dsa.com', 'Maceió', 'AL', '1982-05-21'),
 ('Juliana Castro', 'juliana.castro@exemplo.dsa.com', 'Teresina', 'PI', '1989-06-14');
 
-
 # Use SQL para responder às perguntas abaixo:
 --16/10/2024:
 -- Pergunta 1: Quantos clientes estão registrados por estado?
@@ -38,7 +37,6 @@ SELECT
 FROM cap05.clientes
 GROUP BY estado
 ORDER BY contagem_total;
-
 
 -- Pergunta 2: Qual é a idade média dos clientes?
 SELECT
@@ -67,7 +65,6 @@ SELECT
 		WHERE ((EXTRACT(YEAR FROM CURRENT_DATE) - EXTRACT(YEAR FROM data_nascimento))) >30
 	) as SUBQUERY
 	
-	
 -- Pergunta 4: Quais são as 3 cidades com o maior número de clientes?
 SELECT * FROM cap05.clientes where 1 = 0;
 SELECT
@@ -86,7 +83,6 @@ SELECT COUNT(email) as total_com_email FROM(
 	FROM cap05.clientes
 	WHERE email like '%@%'
 ) as SUBQUERY
-
 SELECT 
     COUNT(*) AS total_geral,
     COUNT(CASE WHEN email != '' THEN 1 END) AS total_com_email,

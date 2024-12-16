@@ -151,9 +151,10 @@ SELECT quadrante, CASE
 FROM cap06.dsa_pacientes;
 
 #irradiando:
-irradiando[VARCHAR(255)]:  Esta  coluna indicase  o  paciente  
-está  ou  não  recebendo tratamento de radioterapia. 
-Os valores podem incluir "não" ou "sim”. Esta variável deve ser representada numericamente.
+irradiando[VARCHAR(255)]:  Esta  coluna indica se  o  paciente  está  ou  não  recebendo tratamento de radioterapia. 
+Os valores podem incluir "não" ou "sim". 
+
+--Esta variável deve ser representada numericamente.
 
 SELECT DISTINCT(irradiando) FROM cap06.dsa_pacientes;
 

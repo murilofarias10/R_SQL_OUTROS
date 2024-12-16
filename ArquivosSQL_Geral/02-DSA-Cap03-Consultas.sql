@@ -9,7 +9,6 @@ FROM cap03.estudantes_dsa;
 SELECT id, nome, sobrenome, nota_exame1, nota_exame2, tipo_sistema_operacional
 FROM cap03.estudantes_dsa;
 
-
 -- ORDER BY
 SELECT id, nome, sobrenome, nota_exame1, nota_exame2, tipo_sistema_operacional
 FROM cap03.estudantes_dsa
@@ -65,6 +64,3 @@ SELECT nome, sobrenome, nota_exame1, tipo_sistema_operacional,
 		ELSE 4
 	END AS Codigo_Sistema
 FROM cap03.estudantes_dsa;
-
-
-

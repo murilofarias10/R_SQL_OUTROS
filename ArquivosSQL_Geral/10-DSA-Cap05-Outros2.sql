@@ -1,6 +1,5 @@
 # SQL Para Análise de Dados e Data Science - Capítulo 05
 
-
 -- Query SQL para retornar o valor total final de vendas por dia.
 select * FROM cap05.dsa_vendas order by data_venda asc limit 10;
 
@@ -34,8 +33,6 @@ FROM cap05.dsa_vendas
 GROUP BY primeiro_dia
 ORDER BY primeiro_dia;
 
-
-
 SELECT 
 	data_venda AS primeiro_dia,
 	sum(valor_unitario_venda * unidades_Vendidas) as total
@@ -52,7 +49,6 @@ SELECT
 FROM cap05.dsa_vendas
 GROUP BY Data_Venda
 ORDER BY Data_Venda;
-
 
 -- Query SQL para retornar a média do valor total final de vendas por mês.
 SELECT 
@@ -71,7 +67,6 @@ FROM cap05.dsa_vendas
 GROUP BY Ano, Mes
 ORDER BY Ano, Mes;
 
-
 -- Query SQL para retornar a média do valor total final de venda no dia 1 de cada mês.
 SELECT 
     EXTRACT(YEAR FROM Data_Venda) AS Ano,
@@ -81,7 +76,6 @@ FROM cap05.dsa_vendas
 WHERE EXTRACT(DAY FROM Data_Venda) = 1
 GROUP BY Ano, Mes
 ORDER BY Ano, Mes;
-
 
 -- Query SQL para retornar a média do valor total final de venda entre os dias 10 e 20 de cada mês.
 SELECT 
