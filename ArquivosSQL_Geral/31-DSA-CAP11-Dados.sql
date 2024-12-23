@@ -1,6 +1,5 @@
 # SQL Para Análise de Dados e Data Science - Capítulo 11
 
-
 -- Verifica os dados
 SELECT * FROM cap11.vendas
 
@@ -54,17 +53,17 @@ ORDER BY ano, mes, funcionario;
 
 --STOP HEREEEEEEEEEEEEEEEEEEEEEEE
 
--- Unidades vendidas por ano, mes e por funcionário e valor máximo de unidades vendidas do ano
+-- Unidades vendidas por ano, mes e por funcionário e valor máximo de unidades vendidas do ano e mes
+
 SELECT ano, 
        mes,
        funcionario,
        unidades_vendidas,
-       MAX(unidades_vendidas) OVER (PARTITION BY ano) AS max_geral_unidades_vendidas_ano
+       MAX(unidades_vendidas) OVER (PARTITION BY ano, mes) AS MAX_unidades_vendidas_ano
 FROM cap11.vendas
-ORDER BY ano, mes, funcionario;
+ORDER BY ano, mes, unidades_vendidas DESC
 
-
--- Relatório geral
+-- Relatório geral utilizando função WINDOW com OVER PARTITION
 SELECT ano, 
        mes,
        funcionario,
@@ -76,17 +75,31 @@ SELECT ano,
 FROM cap11.vendas
 ORDER BY ano, mes, funcionario;
 
+--mudando por funcionario
+SELECT ano, 
+       mes,
+       funcionario,
+       unidades_vendidas AS unidades_vendidas_deste_vendedor,
+       MIN(unidades_vendidas) OVER (PARTITION BY funcionario) AS min_pessoa,
+       MAX(unidades_vendidas) OVER (PARTITION BY funcionario) AS max_pessoa,
+       ROUND(AVG(unidades_vendidas) OVER (PARTITION BY funcionario), 2) AS media_pessoa,
+       SUM(unidades_vendidas) OVER (PARTITION BY funcionario) AS total_pessoa
+FROM cap11.vendas
+ORDER BY funcionario
 
 -- Unidades vendidas por ano, mes e por funcionário, total de unidades vendidas do ano e 
 -- proporcional de cada funcionário em relação ao total do ano
-SELECT ano, 
-       mes, 
-       funcionario,
-       unidades_vendidas,
-       SUM(unidades_vendidas) OVER (PARTITION BY ano) AS unidades_vendidas_ano,
-       ROUND(unidades_vendidas / SUM(unidades_vendidas) OVER (PARTITION BY ano) * 100, 2) AS proporcional_func_ano
+SELECT
+	ano, mes, funcionario, unidades_vendidas,
+	SUM(unidades_vendidas) OVER (PARTITION BY ano) AS TOTAL_ANO,
+	ROUND((unidades_vendidas/SUM(unidades_vendidas) OVER (PARTITION BY ano))*100,2) AS percentual
 FROM cap11.vendas
-ORDER BY ano, mes, funcionario;
+ORDER BY ano, funcionario
+
+
+--STOP HERE
+
+
 
 
 -- Unidades vendidas por ano para cada funcionário, total de unidades vendidas em cada ano e 
