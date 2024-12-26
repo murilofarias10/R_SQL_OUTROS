@@ -51,7 +51,6 @@ SELECT ano,
 FROM cap11.vendas
 ORDER BY ano, mes, funcionario;
 
---STOP HEREEEEEEEEEEEEEEEEEEEEEEE
 
 -- Unidades vendidas por ano, mes e por funcionário e valor máximo de unidades vendidas do ano e mes
 
@@ -96,16 +95,35 @@ SELECT
 FROM cap11.vendas
 ORDER BY ano, funcionario
 
+--Unidades venidas por ano para cada funcionario, total de unidades vendidas em cada ano e proporcional
+--de cada funcionario em relação  ao total do ano
 
---STOP HERE
+--Resposta Murilo usando SUBQUERIE
+SELECT ano, funcionario, SUM(unidades_vendidas), ROUND(AVG(total_ano),2), SUM(percentual) FROM(
+SELECT 
+	ano, funcionario, unidades_vendidas,
+	SUM(unidades_vendidas) OVER (PARTITION BY ano) AS total_ano,
+	ROUND((unidades_vendidas/SUM(unidades_vendidas) OVER (PARTITION BY ano))*100,2) as percentual
+FROM cap11.vendas
+ORDER BY ano
+) AS SUBQUERIE
+GROUP BY ano, funcionario
+ORDER BY ano
 
-
-
-
+--Resposta professor função window e group by
+SELECT 
+	ano, funcionario,
+	SUM(unidades_vendidas) as total,
+	SUM(SUM(unidades_vendidas)) OVER (PARTITION BY ano) AS total_ano,
+	ROUND((SUM(unidades_vendidas)/SUM(SUM(unidades_vendidas)) OVER (PARTITION BY ano))*100,2) as percentual
+FROM cap11.vendas
+GROUP BY ano, funcionario
+ORDER BY ano, funcionario
+--Repostas professor
 -- Unidades vendidas por ano para cada funcionário, total de unidades vendidas em cada ano e 
 -- proporcional de cada funcionário em relação ao total do ano
 
--- Opção 1 - Função Window
+-- Opção 1 - Função Window (Nao chegou no resultado esperado)
 SELECT ano, 
        funcionario,
        unidades_vendidas,
@@ -114,7 +132,7 @@ SELECT ano,
 FROM cap11.vendas
 ORDER BY ano, funcionario;
 
--- Opção 2 - Função Window + Group by
+-- Opção 2 - Função Window + Group by (Nao chegou no resultado esperado)
 SELECT ano, 
        funcionario,
        unidades_vendidas,
@@ -124,7 +142,7 @@ FROM cap11.vendas
 GROUP BY ano, funcionario, unidades_vendidas
 ORDER BY ano, funcionario;
 
--- Opção 3 - CTE e Views Temporárias
+-- Opção 3 - CTE e Views Temporárias (chegou no resultado esperado)
 WITH vendas_agregadas AS (
     SELECT ano, funcionario, SUM(unidades_vendidas) AS total_unidades_vendidas
     FROM cap11.vendas
@@ -159,6 +177,3 @@ GROUP BY
 ORDER BY 
     ano, 
     funcionario;
-
-
-
