@@ -45,6 +45,7 @@ INSERT INTO cap12.vendas (funcionario, ano, mes, unidades_vendidas) VALUES
 ('Alexandre Dumas', 2025, 'Junho', 610),
 ('Alexandre Dumas', 2025, 'Setembro', 634);
 
+SELECT * from cap12.vendas
 
 SELECT funcionario, ano, mes, CASE
 	WHEN mes = 'Janeiro' THEN 1
@@ -108,10 +109,13 @@ FROM cap12.vendas
 ) as SUB
 where venda_numero = 7
 
+select * from cap12.vendas
+
+
+SELECT funcionario, ano, mes, venda_numero, ROW_NUMBER () OVER () 
+FROM (
 SELECT
-	funcionario, ano, mes, unidades_vendidas,
-	ROW_NUMBER() OVER (ORDER BY funcionario, ano,
-	CASE
+	funcionario, ano, mes, CASE
 	WHEN mes = 'Janeiro' THEN 1
 	WHEN mes = 'Fevereiro' THEN 2
 	WHEN mes = 'Março' THEN 3
@@ -123,7 +127,60 @@ SELECT
 	WHEN mes = 'Setembro' THEN 9
 	WHEN mes = 'Outubro' THEN 10
 	WHEN mes = 'Novembro' THEN 11
-	WHEN mes = 'Dezembro' THEN 12
-END) as venda_numero	
+	WHEN mes = 'Dezembro' THEN 12 END as venda_numero, unidades_vendidas
+FROM cap12.vendas
+order by ano, venda_numero ) as SUB
+
+--outras funções windows função ranking
+-- ranking de unidades vendidas do maior numero para o menor por ano
+-- qual funcionario conduziu a transação com maior numero de unidades vendias em cada ano ?
+
+select
+	funcionario, ano, mes, unidades_vendidas,
+	RANK() OVER (PARTITION BY ano ORDER BY unidades_vendidas DESC) as rank_vendas
+from cap12.vendas
+
+select * from (
+select
+	funcionario, ano, mes, unidades_vendidas,
+	RANK() OVER (PARTITION BY ano ORDER BY unidades_vendidas DESC) as rank_vendas
+from cap12.vendas ) as sub
+where rank_vendas = 1
+
+select * from (
+select
+	funcionario, ano, mes, unidades_vendidas,
+	RANK() OVER (PARTITION BY ano ORDER BY unidades_vendidas ASC) as rank_vendas
+from cap12.vendas ) as sub
+where rank_vendas = 1
+
+SELECT * FROM (
+	SELECT funcionario, ano, mes, unidades_vendidas, 
+	RANK() OVER(PARTITION BY ano ORDER BY unidades_vendidas DESC
+) AS rank_vendas
+FROM cap12.vendas) as rank_vendas
+where rank_vendas = (
+	SELECT MAX(rank_vendas)
+	FROM (
+		SELECT RANK() OVER(PARTITION BY ano
+			   ORDER BY unidades_vendidas DESC) AS rank_vendas
+		FROM cap12.vendas)as max_rank
+)
+
+
+--função dense_rank variante da função rank
+
+select
+	funcionario, ano, mes, unidades_vendidas,
+	RANK() OVER(PARTITION BY ano ORDER BY unidades_vendidas DESC) as rank_vendas
 FROM cap12.vendas
 
+select
+	funcionario, ano, mes, unidades_vendidas,
+	DENSE_RANK() OVER(PARTITION BY ano ORDER BY unidades_vendidas DESC) as rank_vendas
+FROM cap12.vendas
+
+-- funções NTILE
+SELECT funcionario, ano, mes, unidades_vendidas,
+	NTILE(2) OVER (PARTITION BY funcionario, ano ORDER BY unidades_vendidas DESC) AS grupo_vendas
+FROM cap12.vendas
