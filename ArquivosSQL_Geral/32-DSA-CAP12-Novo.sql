@@ -208,3 +208,41 @@ SELECT
 		WHEN mes = 'Dezembro' THEN 12 END) as total
 FROM cap12.vendas
 
+-- média acumulada até o ponto para cada funcionário (soma / quantidade)
+SELECT
+	funcionario, ano, mes, unidades_vendidas,
+	round(avg(unidades_vendidas) OVER(PARTITION BY funcionario ORDER BY ano, CASE
+		WHEN mes = 'Janeiro' THEN 1
+		WHEN mes = 'Fevereiro' THEN 2
+		WHEN mes = 'Março' THEN 3
+		WHEN mes = 'Abril' THEN 4
+		WHEN mes = 'Maio' THEN 5
+		WHEN mes = 'Junho' THEN 6
+		WHEN mes = 'Julho' THEN 7
+		WHEN mes = 'Agosto' THEN 8
+		WHEN mes = 'Setembro' THEN 9
+		WHEN mes = 'Outubro' THEN 10
+		WHEN mes = 'Novembro' THEN 11
+		WHEN mes = 'Dezembro' THEN 12 END),2) as total
+FROM cap12.vendas
+
+--calculando a média movel (anterior + atual + proximo / 3)
+SELECT
+	funcionario,
+	ano,
+	mes, unidades_vendidas,
+	ROUND(AVG(unidades_vendidas) OVER (PARTITION BY funcionario ORDER BY ano, CASE
+		WHEN mes = 'Janeiro' THEN 1
+		WHEN mes = 'Fevereiro' THEN 2
+		WHEN mes = 'Março' THEN 3
+		WHEN mes = 'Abril' THEN 4
+		WHEN mes = 'Maio' THEN 5
+		WHEN mes = 'Junho' THEN 6
+		WHEN mes = 'Julho' THEN 7
+		WHEN mes = 'Agosto' THEN 8
+		WHEN mes = 'Setembro' THEN 9
+		WHEN mes = 'Outubro' THEN 10
+		WHEN mes = 'Novembro' THEN 11
+		WHEN mes = 'Dezembro' THEN 12 
+		END ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING), 2) as media_movel
+FROM cap12.vendas;
