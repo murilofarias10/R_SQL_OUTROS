@@ -246,3 +246,77 @@ SELECT
 		WHEN mes = 'Dezembro' THEN 12 
 		END ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING), 2) as media_movel
 FROM cap12.vendas;
+
+--função LEAD adding a new colum showing next value
+SELECT
+	funcionario, ano, mes, unidades_vendidas,
+	COALESCE(
+		CAST(LEAD(unidades_vendidas) OVER (PARTITION BY funcionario ORDER BY ano, CASE
+		WHEN mes = 'Janeiro' THEN 1
+		WHEN mes = 'Fevereiro' THEN 2
+		WHEN mes = 'Março' THEN 3
+		WHEN mes = 'Abril' THEN 4
+		WHEN mes = 'Maio' THEN 5
+		WHEN mes = 'Junho' THEN 6
+		WHEN mes = 'Julho' THEN 7
+		WHEN mes = 'Agosto' THEN 8
+		WHEN mes = 'Setembro' THEN 9
+		WHEN mes = 'Outubro' THEN 10
+		WHEN mes = 'Novembro' THEN 11
+		WHEN mes = 'Dezembro' THEN 12 
+END)AS VARCHAR), 'Sem dados') as proxima
+FROM cap12.vendas;
+
+--função LAG adding a new colum showing previous value
+SELECT
+	funcionario, ano, mes, unidades_vendidas,
+	COALESCE(
+		CAST(LAG(unidades_vendidas) OVER (PARTITION BY funcionario ORDER BY ano, CASE
+		WHEN mes = 'Janeiro' THEN 1
+		WHEN mes = 'Fevereiro' THEN 2
+		WHEN mes = 'Março' THEN 3
+		WHEN mes = 'Abril' THEN 4
+		WHEN mes = 'Maio' THEN 5
+		WHEN mes = 'Junho' THEN 6
+		WHEN mes = 'Julho' THEN 7
+		WHEN mes = 'Agosto' THEN 8
+		WHEN mes = 'Setembro' THEN 9
+		WHEN mes = 'Outubro' THEN 10
+		WHEN mes = 'Novembro' THEN 11
+		WHEN mes = 'Dezembro' THEN 12 
+END)AS VARCHAR), 'Sem dados') as proxima
+FROM cap12.vendas;
+
+-- seleciona os funcionarios juntamente com o valor maximo de unidades vendidas de cada um por ano
+SELECT
+	funcionario, ano, MAX(unidades_vendidas)
+FROM cap12.vendas
+GROUP BY funcionario, ano
+ORDER BY funcionario, ano
+
+-- comparando com a media de venda do ano
+SELECT
+	ano,
+	round(avg(unidades_vendidas),2) as media
+FROM cap12.vendas
+GROUP BY ano
+ORDER BY ano
+
+--juntando os dois como uma subquerie correlata
+SELECT 
+    v.funcionario,
+    v.ano,
+    MAX(v.unidades_vendidas) AS max_unidades,
+    m.media
+FROM cap12.vendas v
+JOIN (
+    SELECT 
+        ano,
+        ROUND(AVG(unidades_vendidas),2) AS media
+    FROM cap12.vendas
+    GROUP BY ano
+) m ON v.ano = m.ano
+GROUP BY v.funcionario, v.ano, m.media
+ORDER BY v.funcionario, v.ano;
+
+
