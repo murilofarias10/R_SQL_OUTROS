@@ -319,4 +319,28 @@ JOIN (
 GROUP BY v.funcionario, v.ano, m.media
 ORDER BY v.funcionario, v.ano;
 
-
+-- subquerie com agregação
+SELECT
+	v.funcionario, ano, mes, unidades_vendidas,
+	ROUND((unidades_vendidas / total_vendas) * 100, 2) AS percentual_do_total
+FROM
+	cap12.vendas AS v,
+	(SELECT funcionario, SUM(unidades_vendidas) AS total_vendas
+	FROM cap12.vendas
+	GROUP BY funcionario) AS vendas_totais
+WHERE
+	v.funcionario = vendas_totais.funcionario
+ORDER BY v.funcionario, ano, CASE
+WHEN mes = 'Janeiro' THEN 1
+		WHEN mes = 'Fevereiro' THEN 2
+		WHEN mes = 'Março' THEN 3
+		WHEN mes = 'Abril' THEN 4
+		WHEN mes = 'Maio' THEN 5
+		WHEN mes = 'Junho' THEN 6
+		WHEN mes = 'Julho' THEN 7
+		WHEN mes = 'Agosto' THEN 8
+		WHEN mes = 'Setembro' THEN 9
+		WHEN mes = 'Outubro' THEN 10
+		WHEN mes = 'Novembro' THEN 11
+		WHEN mes = 'Dezembro' THEN 12 
+	END;
