@@ -57,13 +57,43 @@ FROM cap12.vendas_temporais
 
 -- 3. Crie uma query que mostre o crescimento das vendas diárias em relação ao dia anterior
 -- Por exemplo: De um dia para outro a venda aumento em 23 ou diminuiu em 57
+SELECT * FROM cap12.vendas_temporais where 1 = 0
+
+SELECT data_venda, valor_venda, 
+valor_venda - LAG(valor_venda) OVER (ORDER BY data_venda) as yesterday
+FROM cap12.vendas_temporais
+
+SELECT data_venda, valor_venda, 
+COALESCE(valor_venda - LAG(valor_venda) OVER (ORDER BY data_venda),0) as yesterday
+FROM cap12.vendas_temporais
 
 
 -- 4. Crie uma query que mostre a soma acumulada de vendas dia a dia
-
+SELECT data_venda, SUM(total) as total, SUM(total) OVER (ORDER BY data_venda) as acumulado FROM(
+SELECT data_venda, sum(valor_venda) as total
+FROM cap12.vendas_temporais
+GROUP BY data_venda
+ORDER BY data_venda) as SUB
+GROUP BY data_venda, total
 
 -- 5. [Desafio] Crie um ranking de vendas por funcionário considerando o valor total de vendas por dia e de cada funcionário
+--por funcionario
+SELECT funcionario_id, data_venda, total_venda,
+	RANK() OVER (PARTITION BY funcionario_id ORDER BY total_venda DESC) as rank 
+FROM (
+SELECT funcionario_id, data_venda, SUM(valor_venda) as total_venda
+FROM cap12.vendas_temporais
+GROUP BY funcionario_id, data_venda
+ORDER BY data_venda ) AS SUB
 
+--em geral
+SELECT funcionario_id, data_venda, total_venda,
+	RANK() OVER (ORDER BY total_venda DESC) as rank 
+FROM (
+SELECT funcionario_id, data_venda, SUM(valor_venda) as total_venda
+FROM cap12.vendas_temporais
+GROUP BY funcionario_id, data_venda
+ORDER BY data_venda ) AS SUB
 
 
 
