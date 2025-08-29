@@ -118,3 +118,104 @@ SELECT A.centro_custo, A.moeda,
 	FROM cap13.lancamentosdsacontabeis A
 WHERE A.centro_custo = 'RH' OR A.centro_custo = 'Compras'
 GROUP BY A.centro_custo, A.moeda
+
+--identificacao de outliers na coluna de valor
+SELECT
+	MIN(A.valor),
+	ROUND(PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY A.valor)::NUMERIC, 2) as first_quatile,
+	ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY A.valor)::NUMERIC, 2) as midle,
+	ROUND(AVG(A.valor),2)::NUMERIC AS media,
+	ROUND(PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY A.valor)::NUMERIC, 2) as third_quatile,
+	MAX(A.valor)
+FROM cap13.lancamentosdsacontabeis A
+
+
+--identificacao de outliers na coluna de valor
+--identificar por centro de custo e moeda
+
+
+--criando novo outliers
+-- minimo = (Q1-1,5*IQR)
+-- maximo = (Q3+1,5*IQR)
+-- IQR = Q3-Q1
+SELECT
+	(
+	ROUND(
+	((PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY valor)) - (0.4*
+	((PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY valor)) - (PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY valor)))))
+	::NUMERIC,2) ) as new_minimo,
+
+	(
+	ROUND(
+	((PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY valor)) + (0.5 *
+	((PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY valor)) - (PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY valor)))))
+	::NUMERIC,2) ) as new_maximo
+FROM cap13.lancamentosdsacontabeis
+
+SELECT
+	A.centro_custo, A.moeda,
+	MIN(A.valor),
+	ROUND(PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY A.valor)::NUMERIC, 2) as first_quatile,
+	ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY A.valor)::NUMERIC, 2) as midle,
+	ROUND(AVG(A.valor),2)::NUMERIC AS media,
+	ROUND(PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY A.valor)::NUMERIC, 2) as third_quatile,
+	MAX(A.valor) as valor_maximo,
+	ROUND(
+	((PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY A.valor)) - (0.4 *
+	((PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY A.valor)) - (PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY A.valor)))))
+	::NUMERIC,2) as new_minimo,
+	ROUND(
+	((PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY A.valor)) + (0.4 *
+	((PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY A.valor)) - (PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY A.valor)))))
+	::NUMERIC,2) as new_maximo
+FROM cap13.lancamentosdsacontabeis A
+GROUP BY A.centro_custo, A.moeda
+ORDER BY A.centro_custo, valor_maximo DESC, A.moeda 
+
+--only outliers
+
+SELECT
+	A.centro_custo, A.moeda,
+	MIN(A.valor),
+	ROUND(
+	((PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY A.valor)) - (0.4 *
+	((PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY A.valor)) - (PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY A.valor)))))
+	::NUMERIC,2) as new_minimo,
+	MAX(A.valor) as valor_maximo,
+	ROUND(
+	((PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY A.valor)) + (0.4 *
+	((PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY A.valor)) - (PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY A.valor)))))
+	::NUMERIC,2) as new_maximo
+FROM cap13.lancamentosdsacontabeis A
+GROUP BY A.centro_custo, A.moeda
+ORDER BY A.centro_custo, valor_maximo DESC, A.moeda 
+
+
+WITH Estatisticas AS (
+SELECT 
+	centro_custo,
+	moeda, 
+	PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY valor) AS q1,
+	PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY valor) AS q3
+FROM
+	cap13.lancamentosdsacontabeis
+GROUP BY
+	centro_custo, moeda
+),
+LimitesOutliers AS (
+SELECT
+	centro_custo, moeda,
+	q1, q3,
+	q1 - 0.5 * (q3-q1) as limite_inferior,
+	q3 + 0.5 * (q3-q1) as limite_superior
+FROM Estatisticas
+)
+SELECT
+	L.id, L.data_lancamento, L.centro_custo, L.moeda, L.valor
+FROM cap13.lancamentosdsacontabeis L
+INNER JOIN LimitesOutliers E
+ON
+	L.centro_custo = E.centro_custo AND L.moeda = E.moeda
+WHERE
+	L.valor < E.limite_inferior OR L.valor > E.limite_superior
+ORDER BY L.valor DESC, L.centro_custo, L.moeda
