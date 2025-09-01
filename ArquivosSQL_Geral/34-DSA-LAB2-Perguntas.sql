@@ -219,3 +219,43 @@ ON
 WHERE
 	L.valor < E.limite_inferior OR L.valor > E.limite_superior
 ORDER BY L.valor DESC, L.centro_custo, L.moeda
+
+--Mostre o centro de custo, a conta crédito, a data de lançamento, o valor, 
+-- a media movel 3 dias (2 anteriores e a data atual)
+-- o ranking por media movel em oerdem decrescente.
+-- O calculo da media movel deve ser particionado por centro de custo, considerando a ordem da data de lançamento
+-- o ranking deve ser particionado por data e ordenado pela media movel em ordem descrecente
+
+WITH xfirst AS (
+SELECT centro_custo, conta_credito, data_lancamento, valor,
+	round(avg(valor) OVER (PARTITION BY centro_custo ORDER BY data_lancamento
+	ROWS BETWEEN 2 PRECEDING AND 0 FOLLOWING),2) as media_movel
+FROM cap13.lancamentosdsacontabeis
+),
+xsecond AS (SELECT
+	centro_custo, conta_credito, data_lancamento, valor, media_movel
+FROM xfirst)
+SELECT centro_custo, conta_credito, data_lancamento,
+RANK() OVER (PARTITION BY data_lancamento ORDER BY AVG(media_movel) DESC) AS rank_media_lancamento,
+valor, media_movel
+FROM xsecond
+GROUP BY centro_custo, conta_credito, data_lancamento, valor, media_movel
+
+--by teacheer
+WITH lancamentoOrdernados AS (
+SELECT
+	data_lancamento, centro_custo, conta_credito, valor,
+	ROW_NUMBER() OVER (PARTITION BY centro_custo ORDER BY data_lancamento) AS ordem
+FROM cap13.lancamentosdsacontabeis
+),
+MediaMovel AS (
+	SELECT
+		L.centro_custo, L.data_lancamento, L.conta_credito, L.valor,
+		ROUND(AVG(L.valor) OVER (PARTITION BY L.centro_custo ORDER BY L.ordem ROWS BETWEEN 2 PRECEDING AND CURRENT ROW),2) AS media_movel_3dias 
+FROM lancamentoOrdernados L)
+SELECT
+	M.centro_custo, M.conta_credito, M.data_lancamento, M.valor, M.media_movel_3dias,
+	DENSE_RANK() OVER (PARTITION BY M.data_lancamento ORDER BY M.media_movel_3dias DESC) AS rank_media_movel
+FROM MediaMovel M
+ORDER BY
+	M.data_lancamento, rank_media_movel
