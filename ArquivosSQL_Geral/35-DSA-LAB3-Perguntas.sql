@@ -436,3 +436,22 @@ END
 
 SELECT publico_alvo, publico_alvo_encoded FROM cap15.dsa_campanha_marketing
 SELECT * FROM cap15.dsa_campanha_marketing
+
+--label encoding for canais_divulgacao canais_divulgacao_encoded
+ALTER TABLE cap15.dsa_campanha_marketing
+ADD COLUMN canais_divulgacao_encoded int; 
+
+SELECT DISTINCT canais_divulgacao, canais_divulgacao_encoded 
+FROM cap15.dsa_campanha_marketing
+ORDER BY canais_divulgacao
+
+UPDATE cap15.dsa_campanha_marketing
+SET canais_divulgacao_encoded = CASE
+canais_divulgacao
+	WHEN 'Google' THEN 1
+	WHEN 'Redes Sociais' THEN 2
+	WHEN 'Sites de Notícias' THEN 3
+	ELSE 0
+END
+
+SELECT * FROM cap15.dsa_campanha_marketing
