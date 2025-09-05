@@ -369,8 +369,6 @@ ORDER BY o.orcamento DESC;
 ALTER TABLE cap15.dsa_campanha_marketing
 ADD COLUMN is_outlier BOOLEAN;
 
-
-
 SELECT 
 	ROUND(AVG(orcamento) - (1.5 * STDDEV(orcamento)),2) AS orcamento_outmin,
 	ROUND(AVG(orcamento) + (1.5 * STDDEV(orcamento)),2) AS orcamento_outmxn
@@ -414,7 +412,7 @@ OR
 )
 FROM stats s;
 
--- label encoding for publico_alvo_encoded
+-- label encoding publico_alvo for publico_alvo_encoded
 SELECT DISTINCT publico_alvo, publico_alvo_encoded FROM cap15.dsa_campanha_marketing
 ORDER BY publico_alvo
 
@@ -471,4 +469,16 @@ tipo_campanha
 	ELSE 0
 END
 
+--drop columns publico_alvo canais_divulgacao and tipo_campanha
+SELECT publico_alvo, publico_alvo_encoded,
+	canais_divulgacao, canais_divulgacao_encoded,
+	tipo_campanha, tipo_campanha_encoded
+FROM cap15.dsa_campanha_marketing ORDER BY tipo_campanha
+
+ALTER TABLE cap15.dsa_campanha_marketing
+	DROP COLUMN publico_alvo, 
+	DROP COLUMN canais_divulgacao, 
+	DROP COLUMN tipo_campanha
+
 SELECT * FROM cap15.dsa_campanha_marketing
+
