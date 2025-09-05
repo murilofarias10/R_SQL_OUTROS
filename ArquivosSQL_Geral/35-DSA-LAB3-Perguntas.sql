@@ -414,4 +414,25 @@ OR
 )
 FROM stats s;
 
+-- label encoding for publico_alvo_encoded
+SELECT DISTINCT publico_alvo, publico_alvo_encoded FROM cap15.dsa_campanha_marketing
+ORDER BY publico_alvo
 
+--first adding new colum publico_alvo_encoded
+ALTER TABLE cap15.dsa_campanha_marketing
+ADD COLUMN publico_alvo_encoded int; 
+
+UPDATE cap15.dsa_campanha_marketing
+SET publico_alvo_encoded = CASE
+publico_alvo
+	WHEN 'Publico Alvo 1' THEN 1
+	WHEN 'Publico Alvo 2' THEN 2
+	WHEN 'Publico Alvo 3' THEN 3
+	WHEN 'Publico Alvo 4' THEN 4
+	WHEN 'Publico Alvo 5' THEN 5
+	WHEN 'Outros' THEN 6
+	ELSE 0
+END
+
+SELECT publico_alvo, publico_alvo_encoded FROM cap15.dsa_campanha_marketing
+SELECT * FROM cap15.dsa_campanha_marketing
