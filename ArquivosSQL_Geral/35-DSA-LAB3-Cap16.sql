@@ -345,3 +345,30 @@ FROM cap16.dsa_campanha_marketing
 
 SELECT * FROM cap16.dsa_campanha_marketing
 
+--Relatorio totais dos anos 2022. 2023 e 2024 para as colunas
+--ocamento, taxa_conversao e impressoes
+
+SELECT 
+  EXTRACT(YEAR FROM data_fim)::int AS ano,
+  TO_CHAR(SUM(orcamento), 'FM999,999,999,999') AS total_orcamento,
+  SUM(taxa_conversao) AS total_taxa_conversao,
+  TO_CHAR(SUM(impressoes), 'FM999,999,999,999') AS total_impressoes
+FROM cap16.dsa_campanha_marketing
+WHERE EXTRACT(YEAR FROM data_fim) IN (2022, 2023, 2024)
+GROUP BY ano
+ORDER BY ano DESC
+
+--pivotando
+SELECT
+	'Total' AS TOTAL,
+  TO_CHAR(SUM(CASE WHEN EXTRACT(YEAR FROM data_fim) = 2022 THEN orcamento END), 'FM999,999,999,999') AS total_orcamento_2022,
+  SUM(CASE WHEN EXTRACT(YEAR FROM data_fim) = 2022 THEN taxa_conversao END) AS total_taxa_conversao_2022,
+  TO_CHAR(SUM(CASE WHEN EXTRACT(YEAR FROM data_fim) = 2022 THEN impressoes END), 'FM999,999,999,999') AS total_impressoes_2022,
+  TO_CHAR(SUM(CASE WHEN EXTRACT(YEAR FROM data_fim) = 2023 THEN orcamento END), 'FM999,999,999,999') AS total_orcamento_2023,
+  SUM(CASE WHEN EXTRACT(YEAR FROM data_fim) = 2023 THEN taxa_conversao END) AS total_taxa_conversao_2023,
+  TO_CHAR(SUM(CASE WHEN EXTRACT(YEAR FROM data_fim) = 2023 THEN impressoes END), 'FM999,999,999,999') AS total_impressoes_2023,
+  TO_CHAR(SUM(CASE WHEN EXTRACT(YEAR FROM data_fim) = 2024 THEN orcamento END), 'FM999,999,999,999') AS total_orcamento_2024,
+  SUM(CASE WHEN EXTRACT(YEAR FROM data_fim) = 2024 THEN taxa_conversao END) AS total_taxa_conversao_2024,
+  TO_CHAR(SUM(CASE WHEN EXTRACT(YEAR FROM data_fim) = 2024 THEN impressoes END), 'FM999,999,999,999') AS total_impressoes_2024
+FROM cap16.dsa_campanha_marketing
+
