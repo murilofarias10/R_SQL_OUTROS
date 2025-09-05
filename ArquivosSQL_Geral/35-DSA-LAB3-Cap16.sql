@@ -372,3 +372,25 @@ SELECT
   TO_CHAR(SUM(CASE WHEN EXTRACT(YEAR FROM data_fim) = 2024 THEN impressoes END), 'FM999,999,999,999') AS total_impressoes_2024
 FROM cap16.dsa_campanha_marketing
 
+--Normalizacao Min-Max
+-- para transformar features para uma escala comum sem distorcer as diferencas
+-- Selecione: id, nome_campanha, data_inicio e data_fim
+--junto com orcamento e taxa_conversao normalizado
+
+SELECT id, nome_campanha, data_inicio, data_fim, orcamento, taxa_conversao FROM cap16.dsa_campanha_marketing
+
+--CTE Comon table expression
+WITH first AS (
+	SELECT
+		MIN(orcamento) as min_orcamento,
+		MAX(orcamento) as max_orcamento,
+		MIN(taxa_conversao) as min_taxa_conversao,
+		MAX(taxa_conversao) as max_taxa_conversao
+FROM cap16.dsa_campanha_marketing
+)
+SELECT
+	id, nome_campanha, data_inicio, data_fim,
+	ROUND((orcamento - min_orcamento) / (max_orcamento - min_orcamento),5) as orcamento_normalizado,
+	ROUND((taxa_conversao - min_taxa_conversao) / (max_taxa_conversao - min_taxa_conversao ),5) as taxa_conversao_normalizado
+FROM
+	cap16.dsa_campanha_marketing, first
