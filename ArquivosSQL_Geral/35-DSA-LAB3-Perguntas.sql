@@ -455,3 +455,20 @@ canais_divulgacao
 END
 
 SELECT * FROM cap15.dsa_campanha_marketing
+
+--label encoding for tipo_campanha  tipo_campanha_encoded
+ALTER TABLE cap15.dsa_campanha_marketing
+ADD COLUMN tipo_campanha_encoded INT;
+
+SELECT DISTINCT tipo_campanha, tipo_campanha_encoded FROM cap15.dsa_campanha_marketing ORDER BY tipo_campanha
+
+UPDATE cap15.dsa_campanha_marketing
+SET tipo_campanha_encoded = CASE
+tipo_campanha
+	WHEN 'Divulgação' THEN 1
+	WHEN 'Mais Seguidores' THEN 2
+	WHEN 'Promocional' THEN 3
+	ELSE 0
+END
+
+SELECT * FROM cap15.dsa_campanha_marketing
