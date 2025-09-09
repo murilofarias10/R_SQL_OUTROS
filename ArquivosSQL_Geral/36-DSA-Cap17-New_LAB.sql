@@ -171,7 +171,7 @@ GROUP BY EXTRACT(MONTH FROM data_venda)
 ORDER BY EXTRACT(MONTH FROM data_venda)
 		
 
-7. Quantas Vendas de Notebooks Ocorreram em Junho e Julho de 2023?
+--7. Quantas Vendas de Notebooks Ocorreram em Junho e Julho de 2023?
 
 SELECT
 	p.nome as nome, SUM(v.quantidade) as total, 
@@ -208,7 +208,7 @@ WHERE p.nome = 'Notebook'
 	AND EXTRACT(YEAR FROM v.data_venda) = 2023
 	AND EXTRACT(YEAR FROM v.data_venda) IN (6, 7)
 
-8. Qual o Total de Vendas Por Mês e Por Ano ao Longo do Tempo?
+--8. Qual o Total de Vendas Por Mês e Por Ano ao Longo do Tempo?
 
 SELECT total_vendas, year || '-' || mes AS concact_data FROM (
 SELECT sum(quantidade) AS total_vendas, year, mes FROM (
@@ -227,7 +227,7 @@ FROM cap17.vendas
 GROUP BY mes
 ORDER BY mes
 
-9. Quais Produtos Tiveram Menos de 100 Transações de Venda?
+--9. Quais Produtos Tiveram Menos de 100 Transações de Venda?
 SELECT p.nome, SUM(v.quantidade) as qtde FROM cap17.vendas v
 JOIN cap17.produtos p ON v.id_produto = p.id_produto
 GROUP BY p.nome
@@ -247,12 +247,59 @@ GROUP BY nome
 HAVING COUNT(v.id_produto) < 100
 ORDER BY total_vendas DESC
 
-
-10. Quais Clientes Compraram Smartphone e Também Compraram Smartwatch?
-
+--10. Quais Clientes Compraram Smartphone e Também Compraram Smartwatch?
+--my final answer should be 18
 SELECT * FROM cap17.clientes
 SELECT * FROM cap17.produtos
 SELECT * FROM cap17.vendas
+
+SELECT DISTINCT(nome_cliente) FROM (
+SELECT c.nome as nome_cliente, p.nome as nome_produto FROM cap17.vendas v
+JOIN cap17.clientes c ON v.id_clientes = c.id_cliente
+JOIN cap17.produtos p ON v.id_produto = p.id_produto
+WHERE p.nome = 'Smartphone' OR p.nome = 'Smartwatch'
+ORDER BY nome_cliente
+) AS SUB
+WHERE nome_produto IN ('Smartphone', 'Smartwatch')
+
+--gpt answer
+SELECT c.nome
+FROM cap17.clientes c
+WHERE c.id_cliente IN (
+    SELECT v.id_clientes
+    FROM cap17.vendas v
+    JOIN cap17.produtos p ON v.Id_Produto = p.Id_Produto
+    WHERE p.nome = 'Smartphone'
+)
+AND c.id_cliente IN (
+    SELECT v.id_clientes
+    FROM cap17.vendas v
+    JOIN cap17.produtos p ON v.Id_Produto = p.Id_Produto
+    WHERE p.nome = 'Smartwatch'
+) ORDER BY nome ASC
+
+--teacher answer
+WITH compradores_smartphones AS (
+SELECT v.id_clientes FROM cap17.vendas v
+JOIN cap17.produtos p ON v.id_produto = p.id_produto
+WHERE p.nome = 'Smartphone'
+GROUP BY v.id_clientes
+),
+compradores_smartwatch AS (
+SELECT v.id_clientes FROM cap17.vendas v
+JOIN cap17.produtos p ON v.id_produto = p.id_produto
+WHERE p.nome = 'Smartwatch'
+GROUP BY v.id_clientes
+)
+SELECT c.nome
+FROM cap17.clientes c
+WHERE c.id_cliente IN (
+SELECT id_cliente FROM compradores_smartphones
+INTERSECT
+SELECT id_cliente FROM compradores_smartwatch
+)
+ORDER BY c.nome
+
 11. Quais Clientes Compraram Smartphone e Também Compraram Smartwatch, Mas Não Compraram Notebook?
 12. Quais Clientes Compraram Smartphone e Também Compraram Smartwatch, Mas Não Compraram Notebook em Maio/2024?
 13.  Qual  a  Média  Móvel  de  Quantidade  de  Unidades  Vendidas  ao  Longo  do  Tempo? Considere Janela de 7 Dias
