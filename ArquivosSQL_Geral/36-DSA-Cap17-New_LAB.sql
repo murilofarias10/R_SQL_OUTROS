@@ -211,9 +211,9 @@ WHERE p.nome = 'Notebook'
 8. Qual o Total de Vendas Por Mês e Por Ano ao Longo do Tempo?
 
 SELECT total_vendas, year || '-' || mes AS concact_data FROM (
-SELECT sum(quantidade) as total_vendas, year, mes FROM (
-SELECT COUNT(*) as quantidade, EXTRACT(YEAR FROM data_venda) as year,
-EXTRACT(MONTH FROM data_venda) as mes
+SELECT sum(quantidade) AS total_vendas, year, mes FROM (
+SELECT COUNT(*) AS quantidade, EXTRACT(YEAR FROM data_venda) AS year,
+EXTRACT(MONTH FROM data_venda) AS mes
 	 FROM cap17.vendas GROUP BY data_venda
 ORDER BY data_venda
 ) AS SUB
@@ -222,17 +222,37 @@ ORDER BY year, mes
 ) AS SUB2
 
 SELECT
-	DATE_TRUNC('month', data_venda) as mes, COUNT(*) as total_vendas
+	DATE_TRUNC('month', data_venda) AS mes, COUNT(*) AS total_vendas
 FROM cap17.vendas
 GROUP BY mes
 ORDER BY mes
 
 9. Quais Produtos Tiveram Menos de 100 Transações de Venda?
+SELECT p.nome, SUM(v.quantidade) as qtde FROM cap17.vendas v
+JOIN cap17.produtos p ON v.id_produto = p.id_produto
+GROUP BY p.nome
+ORDER BY qtde DESC
+
+SELECT p.nome, COUNT(*) as qtde FROM cap17.vendas v
+JOIN cap17.produtos p ON v.id_produto = p.id_produto
+GROUP BY p.nome
+HAVING COUNT(*) < 100
+ORDER BY qtde DESC
+
+--Teacher
+SELECT p.nome, COUNT(v.id_produto) as total_vendas
+FROM cap17.vendas v JOIN cap17.produtos p
+ON v.id_produto = p.id_produto
+GROUP BY nome
+HAVING COUNT(v.id_produto) < 100
+ORDER BY total_vendas DESC
+
+
+10. Quais Clientes Compraram Smartphone e Também Compraram Smartwatch?
+
 SELECT * FROM cap17.clientes
 SELECT * FROM cap17.produtos
 SELECT * FROM cap17.vendas
-
-10. Quais Clientes Compraram Smartphone e Também Compraram Smartwatch?
 11. Quais Clientes Compraram Smartphone e Também Compraram Smartwatch, Mas Não Compraram Notebook?
 12. Quais Clientes Compraram Smartphone e Também Compraram Smartwatch, Mas Não Compraram Notebook em Maio/2024?
 13.  Qual  a  Média  Móvel  de  Quantidade  de  Unidades  Vendidas  ao  Longo  do  Tempo? Considere Janela de 7 Dias
