@@ -172,6 +172,47 @@ ORDER BY EXTRACT(MONTH FROM data_venda)
 		
 
 7. Quantas Vendas de Notebooks Ocorreram em Junho e Julho de 2023?
+
+SELECT * FROM cap17.clientes
+SELECT * FROM cap17.produtos
+SELECT * FROM cap17.vendas
+
+SELECT
+	p.nome as nome, SUM(v.quantidade) as total, 
+	EXTRACT(YEAR FROM v.data_venda) AS YEAR,
+	EXTRACT(MONTH FROM v.data_venda) AS MONTH FROM CAP17.vendas v
+JOIN cap17.produtos p ON v.id_produto = p.id_produto
+GROUP BY nome, EXTRACT(YEAR FROM v.data_venda), EXTRACT(MONTH FROM v.data_venda)
+HAVING nome = 'Notebook'
+ORDER BY year, month DESC
+
+SELECT
+	p.nome as nome, SUM(v.quantidade) as total FROM CAP17.vendas v
+JOIN cap17.produtos p ON v.id_produto = p.id_produto
+GROUP BY nome
+HAVING nome = 'Notebook'
+
+SELECT nome, sum(total) AS TOTAL FROM(
+SELECT
+	p.nome AS nome, SUM(v.quantidade) AS total, 
+	EXTRACT(YEAR FROM v.data_venda) AS YEAR,
+	EXTRACT(MONTH FROM v.data_venda)AS MES FROM CAP17.vendas v
+JOIN cap17.produtos p ON v.id_produto = p.id_produto
+GROUP BY nome, EXTRACT(YEAR FROM v.data_venda), EXTRACT(MONTH FROM v.data_venda)
+HAVING nome = 'Notebook' AND EXTRACT(YEAR FROM v.data_venda)  = 2023 AND
+	(EXTRACT(MONTH FROM v.data_venda) = 6 OR EXTRACT(MONTH FROM v.data_venda) = 7)
+) AS SUB
+GROUP BY nome
+
+--Teacher answer there is an error
+SELECT COUNT(*) as total_vendas_notebook
+FROM cap17.vendas v
+JOIN cap17.produtos p ON v.id_produto = p.id_produto
+WHERE p.nome = 'Notebook'
+	AND EXTRACT(YEAR FROM v.data_venda) = 2023
+	AND EXTRACT(YEAR FROM v.data_venda) IN (6, 7)
+
+
 8. Qual o Total de Vendas Por Mês e Por Ano ao Longo do Tempo?
 9. Quais Produtos Tiveram Menos de 100 Transações de Venda?
 10. Quais Clientes Compraram Smartphone e Também Compraram Smartwatch?
