@@ -105,11 +105,6 @@ ORDER BY total_vendas DESC
 LIMIT 5
 
 --5. Quais Clientes Fizeram 6 ou Mais Transações de Compra?
-
-SELECT * FROM cap17.clientes
-SELECT * FROM cap17.produtos
-SELECT * FROM cap17.vendas
-
 SELECT v.id_clientes as id_cliente, c.nome as nome_cliente, COUNT(*) as total FROM cap17.vendas v
 JOIN cap17.clientes c
 ON v.id_clientes = c.id_cliente
@@ -124,7 +119,58 @@ GROUP BY c.nome
 HAVING COUNT(v.id_clientes) >=6
 ORDER BY total_compras DESC
 
-6. Qual o Total de Transações Comerciais Por Mês no Ano de 2024? Apresente os Nomes dos Meses no Resultado, Que Deve Ser Ordenado Por Mês
+--6. Qual o Total de Transações Comerciais Por Mês no Ano de 2024? 
+--Apresente os Nomes dos Meses no Resultado, Que Deve Ser Ordenado Por Mês
+
+SELECT CASE
+	WHEN month_name = 1 THEN 'January' 
+	WHEN month_name = 2 THEN 'February'
+    WHEN month_name = 3 THEN 'March'
+    WHEN month_name = 4 THEN 'April'
+    WHEN month_name = 5 THEN 'May'
+    WHEN month_name = 6 THEN 'June'
+    WHEN month_name = 7 THEN 'July'
+    WHEN month_name = 8 THEN 'August'
+    WHEN month_name = 9 THEN 'September'
+    WHEN month_name = 10 THEN 'October'
+    WHEN month_name = 11 THEN 'November'
+    WHEN month_name = 12 THEN 'December'
+	END AS month_name, total_transacoes
+	FROM(
+SELECT year, month_name, SUM(total_transacoes) as total_transacoes FROM(
+SELECT EXTRACT(YEAR FROM data_venda) AS YEAR,
+	EXTRACT(MONTH FROM data_venda) AS month_name,
+ 	count(*) AS total_transacoes FROM cap17.vendas
+GROUP BY year, data_venda ORDER BY data_venda ASC
+) AS SUB
+GROUP BY year, month_name 
+HAVING year = 2024
+ORDER BY year, month_name ASC
+) AS SUB_dois
+
+--Teacher
+SELECT
+	CASE
+		WHEN EXTRACT(MONTH FROM data_venda) = 1 THEN 'Janeiro'
+		WHEN EXTRACT(MONTH FROM data_venda) = 2 THEN 'Fev'
+		WHEN EXTRACT(MONTH FROM data_venda) = 3 THEN 'Mar'
+		WHEN EXTRACT(MONTH FROM data_venda) = 4 THEN 'Abr'
+		WHEN EXTRACT(MONTH FROM data_venda) = 5 THEN 'May'
+		WHEN EXTRACT(MONTH FROM data_venda) = 6 THEN 'Jun'
+		WHEN EXTRACT(MONTH FROM data_venda) = 7 THEN 'Julio'
+		WHEN EXTRACT(MONTH FROM data_venda) = 8 THEN 'Ago'
+		WHEN EXTRACT(MONTH FROM data_venda) = 9 THEN 'Sep'
+		WHEN EXTRACT(MONTH FROM data_venda) = 10 THEN 'Oct'
+		WHEN EXTRACT(MONTH FROM data_venda) = 11 THEN 'Novembro'
+		WHEN EXTRACT(MONTH FROM data_venda) = 12 THEN 'Dec'
+		END as mes,
+		COUNT(*) as total_vendas
+FROM cap17.vendas
+WHERE EXTRACT(YEAR FROM data_venda)= 2024
+GROUP BY EXTRACT(MONTH FROM data_venda)
+ORDER BY EXTRACT(MONTH FROM data_venda)
+		
+
 7. Quantas Vendas de Notebooks Ocorreram em Junho e Julho de 2023?
 8. Qual o Total de Vendas Por Mês e Por Ano ao Longo do Tempo?
 9. Quais Produtos Tiveram Menos de 100 Transações de Venda?
