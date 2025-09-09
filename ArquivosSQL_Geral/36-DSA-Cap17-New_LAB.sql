@@ -57,11 +57,6 @@ SELECT COUNT(DISTINCT id_produto) as total_produtos_unicos FROM cap17.vendas
 
 --3. Quantas Vendas Ocorreram Por Produto? Mostre o Resultado em Ordem Decrescente.
 
-SELECT * FROM cap17.clientes
-SELECT * FROM cap17.produtos
-SELECT * FROM cap17.vendas
-
-
 WITH first_table AS (
 SELECT DISTINCT(id_produto) as produtos, COUNT(id_vendas) as qtde_vendas FROM cap17.vendas v
 GROUP BY id_produto ORDER BY qtde_vendas DESC
@@ -109,7 +104,26 @@ GROUP BY p.nome
 ORDER BY total_vendas DESC
 LIMIT 5
 
-5. Quais Clientes Fizeram 6 ou Mais Transações de Compra?
+--5. Quais Clientes Fizeram 6 ou Mais Transações de Compra?
+
+SELECT * FROM cap17.clientes
+SELECT * FROM cap17.produtos
+SELECT * FROM cap17.vendas
+
+SELECT v.id_clientes as id_cliente, c.nome as nome_cliente, COUNT(*) as total FROM cap17.vendas v
+JOIN cap17.clientes c
+ON v.id_clientes = c.id_cliente
+GROUP BY v.id_clientes, c.nome
+HAVING COUNT(*) >=6
+ORDER BY total DESC
+
+SELECT c.nome, COUNT(v.id_clientes) as total_compras
+FROM cap17.vendas v
+JOIN cap17.clientes c ON v.id_clientes = c.id_cliente
+GROUP BY c.nome
+HAVING COUNT(v.id_clientes) >=6
+ORDER BY total_compras DESC
+
 6. Qual o Total de Transações Comerciais Por Mês no Ano de 2024? Apresente os Nomes dos Meses no Resultado, Que Deve Ser Ordenado Por Mês
 7. Quantas Vendas de Notebooks Ocorreram em Junho e Julho de 2023?
 8. Qual o Total de Vendas Por Mês e Por Ano ao Longo do Tempo?
