@@ -173,10 +173,6 @@ ORDER BY EXTRACT(MONTH FROM data_venda)
 
 7. Quantas Vendas de Notebooks Ocorreram em Junho e Julho de 2023?
 
-SELECT * FROM cap17.clientes
-SELECT * FROM cap17.produtos
-SELECT * FROM cap17.vendas
-
 SELECT
 	p.nome as nome, SUM(v.quantidade) as total, 
 	EXTRACT(YEAR FROM v.data_venda) AS YEAR,
@@ -212,9 +208,30 @@ WHERE p.nome = 'Notebook'
 	AND EXTRACT(YEAR FROM v.data_venda) = 2023
 	AND EXTRACT(YEAR FROM v.data_venda) IN (6, 7)
 
-
 8. Qual o Total de Vendas Por Mês e Por Ano ao Longo do Tempo?
+
+SELECT total_vendas, year || '-' || mes AS concact_data FROM (
+SELECT sum(quantidade) as total_vendas, year, mes FROM (
+SELECT COUNT(*) as quantidade, EXTRACT(YEAR FROM data_venda) as year,
+EXTRACT(MONTH FROM data_venda) as mes
+	 FROM cap17.vendas GROUP BY data_venda
+ORDER BY data_venda
+) AS SUB
+GROUP BY year, mes
+ORDER BY year, mes
+) AS SUB2
+
+SELECT
+	DATE_TRUNC('month', data_venda) as mes, COUNT(*) as total_vendas
+FROM cap17.vendas
+GROUP BY mes
+ORDER BY mes
+
 9. Quais Produtos Tiveram Menos de 100 Transações de Venda?
+SELECT * FROM cap17.clientes
+SELECT * FROM cap17.produtos
+SELECT * FROM cap17.vendas
+
 10. Quais Clientes Compraram Smartphone e Também Compraram Smartwatch?
 11. Quais Clientes Compraram Smartphone e Também Compraram Smartwatch, Mas Não Compraram Notebook?
 12. Quais Clientes Compraram Smartphone e Também Compraram Smartwatch, Mas Não Compraram Notebook em Maio/2024?
