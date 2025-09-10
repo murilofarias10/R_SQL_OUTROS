@@ -249,10 +249,6 @@ ORDER BY total_vendas DESC
 
 --10. Quais Clientes Compraram Smartphone e Também Compraram Smartwatch?
 --my final answer should be 18
-SELECT * FROM cap17.clientes
-SELECT * FROM cap17.produtos
-SELECT * FROM cap17.vendas
-
 SELECT DISTINCT(nome_cliente) FROM (
 SELECT c.nome as nome_cliente, p.nome as nome_produto FROM cap17.vendas v
 JOIN cap17.clientes c ON v.id_clientes = c.id_cliente
@@ -300,8 +296,61 @@ SELECT id_cliente FROM compradores_smartwatch
 )
 ORDER BY c.nome
 
-11. Quais Clientes Compraram Smartphone e Também Compraram Smartwatch, Mas Não Compraram Notebook?
+--11. Quais Clientes Compraram Smartphone e Também Compraram Smartwatch, Mas Não Compraram Notebook?
+SELECT nome FROM(
+with Smartphone AS (
+SELECT  v.id_clientes FROM cap17.vendas v
+INNER JOIN cap17.produtos p ON v.id_produto = p.id_produto
+INNER JOIN cap17.clientes c ON v.id_clientes = c.id_cliente
+WHERE p.nome = 'Smartphone'
+), Smartwatch AS (
+SELECT  v.id_clientes FROM cap17.vendas v
+INNER JOIN cap17.produtos p ON v.id_produto = p.id_produto
+INNER JOIN cap17.clientes c ON v.id_clientes = c.id_cliente
+WHERE p.nome = 'Smartwatch'
+) SELECT c.nome FROM cap17.clientes c 
+WHERE c.id_cliente IN (
+SELECT id_clientes FROM Smartphone
+INTERSECT
+SELECT id_clientes FROM Smartwatch)
+ORDER BY c.nome
+) AS SUB
+WHERE nome NOT IN
+(
+SELECT  c.nome FROM cap17.vendas v
+INNER JOIN cap17.produtos p ON v.id_produto = p.id_produto
+INNER JOIN cap17.clientes c ON v.id_clientes = c.id_cliente
+WHERE p.nome = 'Notebook'
+)
+ORDER BY nome
+
+--teacher answer
+WITH clientes_smartphone AS (
+SELECT id_clientes FROM cap17.vendas
+JOIN cap17.produtos ON vendas.id_produto = produtos.id_produto
+WHERE produtos.nome = 'Smartphone'
+),
+clientes_smartwatch AS (
+SELECT id_clientes FROM cap17.vendas
+JOIN cap17.produtos ON vendas.id_produto = produtos.id_produto
+WHERE produtos.nome = 'Smartwatch'
+),
+clientes_notebook AS (
+SELECT id_clientes FROM cap17.vendas
+JOIN cap17.produtos ON vendas.id_produto = produtos.id_produto
+WHERE produtos.nome = 'Notebook'
+)
+SELECT clientes.nome FROM cap17.clientes
+WHERE id_cliente IN(
+	SELECT id_clientes FROM clientes_smartphone
+	INTERSECT
+	SELECT id_clientes FROM clientes_smartwatch)
+AND id_cliente NOT IN (SELECT id_clientes FROM clientes_notebook)
+	
 12. Quais Clientes Compraram Smartphone e Também Compraram Smartwatch, Mas Não Compraram Notebook em Maio/2024?
+SELECT * FROM cap17.clientes
+SELECT * FROM cap17.produtos
+SELECT * FROM cap17.vendas
 13.  Qual  a  Média  Móvel  de  Quantidade  de  Unidades  Vendidas  ao  Longo  do  Tempo? Considere Janela de 7 Dias
 14. Qual a Média Móvel e Desvio Padrão Móvel de Quantidade de Unidades Vendidas ao Longo do Tempo? Considere Janela de 7 Dias
 15. Quais Clientes Estão Cadastrados, Mas Ainda Não Fizeram Transação?
