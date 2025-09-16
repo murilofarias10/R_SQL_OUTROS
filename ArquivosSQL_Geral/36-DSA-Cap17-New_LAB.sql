@@ -348,9 +348,85 @@ WHERE id_cliente IN(
 AND id_cliente NOT IN (SELECT id_clientes FROM clientes_notebook)
 	
 12. Quais Clientes Compraram Smartphone e Também Compraram Smartwatch, Mas Não Compraram Notebook em Maio/2024?
+
 SELECT * FROM cap17.clientes
 SELECT * FROM cap17.produtos
 SELECT * FROM cap17.vendas
+
+SELECT nome FROM(
+with Smartphone AS (
+SELECT  v.id_clientes FROM cap17.vendas v
+INNER JOIN cap17.produtos p ON v.id_produto = p.id_produto
+INNER JOIN cap17.clientes c ON v.id_clientes = c.id_cliente
+WHERE p.nome = 'Smartphone' AND
+EXTRACT(MONTH FROM v.data_venda) = 5 AND
+EXTRACT(YEAR FROM v.data_venda) = 2024
+), Smartwatch AS (
+SELECT  v.id_clientes FROM cap17.vendas v
+INNER JOIN cap17.produtos p ON v.id_produto = p.id_produto
+INNER JOIN cap17.clientes c ON v.id_clientes = c.id_cliente
+WHERE p.nome = 'Smartwatch' AND
+EXTRACT(MONTH FROM v.data_venda) = 5 AND
+EXTRACT(YEAR FROM v.data_venda) = 2024
+) SELECT c.nome FROM cap17.clientes c 
+WHERE c.id_cliente IN (
+SELECT id_clientes FROM Smartphone
+INTERSECT
+SELECT id_clientes FROM Smartwatch)
+ORDER BY c.nome
+) AS SUB
+WHERE nome NOT IN
+(
+SELECT  c.nome FROM cap17.vendas v
+INNER JOIN cap17.produtos p ON v.id_produto = p.id_produto
+INNER JOIN cap17.clientes c ON v.id_clientes = c.id_cliente
+WHERE p.nome = 'Notebook' AND
+EXTRACT(MONTH FROM v.data_venda) = 5 AND
+EXTRACT(YEAR FROM v.data_venda) = 2024
+ORDER BY nome
+)
+ORDER BY nome
+
+--teacher anwer
+-- Clientes que compraram Smartphone em Maio/2024
+WITH clientes_smartphone AS (
+    SELECT v.id_clientes FROM cap17.vendas v
+    JOIN cap17.produtos p ON v.id_produto = p.id_produto
+    WHERE p.nome = 'Smartphone'
+      AND DATE_PART('year', v.Data_Venda) = 2024
+      AND DATE_PART('month', v.Data_Venda) = 5
+),-- Clientes que compraram Smartwatch em Maio/2024
+clientes_smartwatch AS (
+    SELECT v.Id_Clientes
+    FROM cap17.vendas v
+    JOIN cap17.produtos p ON v.Id_Produto = p.Id_Produto
+    WHERE p.nome = 'Smartwatch'
+      AND DATE_PART('year', v.Data_Venda) = 2024
+      AND DATE_PART('month', v.Data_Venda) = 5
+),-- Clientes que compraram Notebook em Maio/2024
+clientes_notebook AS (
+    SELECT v.Id_Clientes
+    FROM cap17.vendas v
+    JOIN cap17.produtos p ON v.Id_Produto = p.Id_Produto
+    WHERE p.nome = 'Notebook'
+      AND DATE_PART('year', v.Data_Venda) = 2024
+      AND DATE_PART('month', v.Data_Venda) = 5
+)-- Clientes que compraram Smartphone e Smartwatch, mas não Notebook
+SELECT c.nome
+FROM cap17.clientes c
+WHERE c.Id_Cliente IN (
+          SELECT Id_Cliente
+          FROM clientes_smartphone
+          INTERSECT
+          SELECT Id_Cliente
+          FROM clientes_smartwatch
+      )
+  AND c.Id_Cliente NOT IN (
+          SELECT Id_Cliente
+          FROM clientes_notebook
+      );
+
+
 13.  Qual  a  Média  Móvel  de  Quantidade  de  Unidades  Vendidas  ao  Longo  do  Tempo? Considere Janela de 7 Dias
 14. Qual a Média Móvel e Desvio Padrão Móvel de Quantidade de Unidades Vendidas ao Longo do Tempo? Considere Janela de 7 Dias
 15. Quais Clientes Estão Cadastrados, Mas Ainda Não Fizeram Transação?
