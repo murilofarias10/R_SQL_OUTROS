@@ -348,11 +348,6 @@ WHERE id_cliente IN(
 AND id_cliente NOT IN (SELECT id_clientes FROM clientes_notebook)
 	
 12. Quais Clientes Compraram Smartphone e Também Compraram Smartwatch, Mas Não Compraram Notebook em Maio/2024?
-
-SELECT * FROM cap17.clientes
-SELECT * FROM cap17.produtos
-SELECT * FROM cap17.vendas
-
 SELECT nome FROM(
 with Smartphone AS (
 SELECT  v.id_clientes FROM cap17.vendas v
@@ -426,7 +421,40 @@ WHERE c.Id_Cliente IN (
           FROM clientes_notebook
       );
 
-
 13.  Qual  a  Média  Móvel  de  Quantidade  de  Unidades  Vendidas  ao  Longo  do  Tempo? Considere Janela de 7 Dias
+SELECT data_venda, quantidade, 
+ROUND(avg(quantidade) OVER (ORDER BY data_venda ROWS BETWEEN 7 PRECEDING AND 0 FOLLOWING),2) as media_movel
+FROM cap17.vendas
+ORDER BY data_venda
+
 14. Qual a Média Móvel e Desvio Padrão Móvel de Quantidade de Unidades Vendidas ao Longo do Tempo? Considere Janela de 7 Dias
+SELECT quantidade, data_venda, media_7_dias, 
+	(CASE WHEN std_7_dias IS NULL THEN 0 ELSE std_7_dias END) FROM (
+SELECT  quantidade, data_venda, 
+AVG(quantidade) OVER(ORDER BY data_venda ROWS BETWEEN 7 PRECEDING AND 0 FOLLOWING) as media_7_dias,
+STDDEV(quantidade) OVER(ORDER BY data_venda ROWS BETWEEN 7 PRECEDING AND 0 FOLLOWING) as std_7_dias
+FROM cap17.vendas
+GROUP BY data_venda, quantidade
+ORDER BY data_venda ) as SUB
+
+SELECT  quantidade, data_venda, 
+AVG(quantidade) OVER(ORDER BY data_venda ROWS BETWEEN 7 PRECEDING AND 0 FOLLOWING) as media_7_dias,
+CASE WHEN 
+STDDEV(quantidade) OVER(ORDER BY data_venda ROWS BETWEEN 7 PRECEDING AND 0 FOLLOWING) IS NULL THEN 0
+ELSE STDDEV(quantidade) OVER(ORDER BY data_venda ROWS BETWEEN 7 PRECEDING AND 0 FOLLOWING) END as std_7_dias
+FROM cap17.vendas
+GROUP BY data_venda, quantidade
+ORDER BY data_venda
+
 15. Quais Clientes Estão Cadastrados, Mas Ainda Não Fizeram Transação?
+SELECT c.id_cliente, c.nome FROM cap17.clientes c 
+WHERE c.id_cliente NOT IN (
+SELECT DISTINCT(id_clientes) FROM cap17.vendas
+) ORDER BY nome
+
+--teacher answer
+SELECT c.id_cliente, c.nome
+FROM cap17.clientes c
+LEFT JOIN cap17.vendas v ON c.id_cliente = v.id_clientes
+WHERE v.id_clientes IS NULL 
+ORDER BY c.nome
