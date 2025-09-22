@@ -72,7 +72,7 @@ SELECT * FROM cap18.clientes
 WHERE endereco LIKE '%A%'
 
 ----------------------------------------
--- Cria a tabela 'interacoes'
+-- Cria a tabela 'interacoes_dois'
 CREATE TABLE cap18.interacoes_dois (
     interacao_id SERIAL PRIMARY KEY,
     cliente_id INT NOT NULL,
@@ -130,5 +130,56 @@ $$;
 
 CALL cap18.inserir_interacoes_dois(1000)
 
+SELECT * FROM cap18.clientes
 SELECT * FROM cap18.interacoes_dois
-order by cliente_id
+SELECT * FROM cap18.vendas
+
+-- Cria a tabela 'vendas_dois'
+CREATE TABLE cap18.vendas_dois (
+    venda_id SERIAL PRIMARY KEY,
+    cliente_id INT NOT NULL,
+    quantidade INT NOT NULL,
+    valor_venda DECIMAL(10, 2) NOT NULL,
+    data_venda DATE,
+    FOREIGN KEY (cliente_id) REFERENCES cap18.clientes(cliente_id)
+);
+
+CREATE OR REPLACE PROCEDURE cap18.inserir_vendas_aleatorias(total INT DEFAULT 1000)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+	i INT;
+	cliente_ID_aleatorio INT;
+	quantidade_aleatorio INT;
+	valor_venda_aleatorio NUMERIC(10,2);
+	data_hora_aleatorio DATE;
+BEGIN
+	FOR i IN 1..total LOOP
+		--random between 0 a 0,999999
+		cliente_ID_aleatorio := trunc((random() * 1000) + 1)::INT;
+		
+		quantidade_aleatorio := trunc((random() * 500) + 1)::INT;
+	
+		valor_venda_aleatorio := ROUND((random()*10000 +1)::NUMERIC,2);
+	
+		--data should be between 2015-09-18 to 2025-09-18
+    -- data_hora aleatória entre 2015-09-18 e 2025-09-18
+    data_hora_aleatorio :=
+      DATE '2015-09-18'
+      + (floor(random() * (DATE '2025-09-18' - DATE '2015-09-18' + 1))::INT);
+	
+		--insert
+		INSERT INTO cap18.vendas_dois (cliente_id, quantidade, valor_venda, data_venda) VALUES
+		(cliente_ID_aleatorio, quantidade_aleatorio,
+		valor_venda_aleatorio, data_hora_aleatorio);
+	END LOOP;
+END;
+$$;
+
+DROP PROCEDURE cap18.inserir_vendas_aleatorias(INT);
+
+CALL cap18.inserir_vendas_aleatorias(1000)
+
+DROP TABLE cap18.vendas_dois
+SELECT *
+	FROM cap18.vendas_dois
