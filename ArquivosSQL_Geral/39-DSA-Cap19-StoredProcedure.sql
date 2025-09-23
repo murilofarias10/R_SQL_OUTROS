@@ -116,6 +116,35 @@ END;
 $$
 
 CALL cap19.inserir_interacoes()
+
+--creating the third procedure
+CREATE OR REPLACE PROCEDURE cap19.inserir_vendas_exemplo()
+LANGUAGE plpgsql
+AS $$
+DECLARE
+	i INT;
+	cliente RECORD;
+	numero_vendas INT;
+	quantidade_venda INT;
+	valor_venda DECIMAL(10,2);
+	data_venda_aleatoria DATE;
+BEGIN
+	FOR cliente IN SELECT cliente_id FROM cap19.clientes LOOP
+		numero_vendas := trunc(random() *5 +1)::INT; --até 5 vendas
+		FOR i IN 1..numero_vendas LOOP
+			valor_venda := trunc(random() * 10000 +500)::DECIMAL;
+			quantidade_venda := trunc(random()*10 +1)::INT; --until 10
+			data_venda_aleatoria := '2021-01-01'::DATE + (trunc(random() * (365 +5))::INT);
+
+			INSERT INTO cap19.vendas (cliente_id, quantidade, valor_venda, data_venda) VALUES
+			(cliente.cliente_id, quantidade_venda, valor_venda, data_venda_aleatoria);
+		END LOOP;
+	END LOOP;
+END;
+$$
+
+CALL cap19.inserir_vendas_exemplo()
+
 SELECT * FROM cap19.clientes
 SELECT * FROM cap19.interacoes
 SELECT * FROM cap19.vendas
