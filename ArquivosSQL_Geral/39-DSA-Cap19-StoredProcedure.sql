@@ -96,3 +96,26 @@ CALL cap19.inserir_clientes_aleatorios(1000)
 
 SELECT * FROM cap19.clientes
 
+--creating second stored procedure
+CREATE OR REPLACE PROCEDURE cap19.inserir_interacoes()
+LANGUAGE plpgsql
+AS $$
+DECLARE
+	cliente RECORD; --tipo de registro
+	data_aleatoria DATE;
+BEGIN
+	FOR cliente IN SELECT cliente_id FROM cap19.clientes LOOP
+		data_aleatoria := '2021-01-01'::DATE + (trunc(random() * (365*5))::INT); --2021 until 2025
+
+		INSERT INTO cap19.interacoes(cliente_id, tipo_interacao, descricao, data_hora) VALUES
+		(cliente.cliente_id, 'Email', 'Email enviado com informações do produto', data_aleatoria),
+		(cliente.cliente_id, 'Telefone', 'Email enviado com informações do produto', data_aleatoria),
+		(cliente.cliente_id, 'Reunião', 'Reunião agendada para discussão de detalhes', data_aleatoria);
+	END LOOP;
+END;
+$$
+
+CALL cap19.inserir_interacoes()
+SELECT * FROM cap19.clientes
+SELECT * FROM cap19.interacoes
+SELECT * FROM cap19.vendas
