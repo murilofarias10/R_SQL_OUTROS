@@ -144,7 +144,3 @@ END;
 $$
 
 CALL cap19.inserir_vendas_exemplo()
-
-SELECT * FROM cap19.clientes
-SELECT * FROM cap19.interacoes
-SELECT * FROM cap19.vendas
